@@ -19,14 +19,22 @@ public class Constants {
 	// lives
 	public static final int STARTING_LIVES = 3;
 	
+	// level start delay
+	public static final float LEVEL_START_DELAY = 0.1f;
+	
 	// atlas path
 	public static final String TEXTURE_ATLAS_OBJECTS = "images/brickgame.atlas";
 	
-	// level paths
-	public static final String LEVEL = "levels/level.png";
+	// scene2d resources
+	public static final String TEXTURE_ATLAS_UI = "images/brickgame-ui.atlas";
+	
+	public static final String SKIN_BRICKGAME_UI = "images/brickgame-ui.json";
+	
+	// level path
+	public static final String LEVEL = "levels/level_color.png";
 	
 	// show fps
-	public static final boolean SHOW_FPS = false;
+	public static final boolean SHOW_FPS = true;
 	
 	// is camera helper active
 	public static final boolean DEBUG = false;

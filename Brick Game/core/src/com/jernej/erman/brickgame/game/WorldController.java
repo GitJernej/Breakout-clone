@@ -5,6 +5,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.Game;
+import com.jernej.erman.brickgame.screens.MenuScreen;
 import com.jernej.erman.brickgame.game.objects.Ball;
 import com.jernej.erman.brickgame.game.objects.Brick;
 import com.jernej.erman.brickgame.game.objects.Pad;
@@ -28,18 +30,24 @@ public class WorldController extends InputAdapter {
 	private Rectangle r1 = new Rectangle();
 	private Rectangle r2 = new Rectangle();
 	
-	// variables for calculating ball angle bounce
-	float intersectionX = 0;
-	float normalizedIntersectionX = 0;
-	float bounceAngle = 0;
+
 	
-	// variables for calculating side of collision on brick
-	float wy = 0;
-	float hx = 0;
+	// level start delay
+	float levelStartDelay;
+	
+
+	
+	private Game game;
+	
+	private void backToMenu() {
+		// switch to menu screen
+		game.setScreen(new MenuScreen(game));
+	}
 	
 	
 		
-	public WorldController(){
+	public WorldController(Game game){
+		this.game = game;
 		init();
 	}
 	
@@ -48,6 +56,7 @@ public class WorldController extends InputAdapter {
 		Gdx.input.setCursorCatched(true);
 		Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
+		levelStartDelay = Constants.LEVEL_START_DELAY;
 		lives = Constants.STARTING_LIVES;
 		score = 0;
 		initLevel();
@@ -60,15 +69,20 @@ public class WorldController extends InputAdapter {
 
 	public void update(float deltaTime){
 		if (Constants.DEBUG) handleDebugInput(deltaTime);		
-		if (paused) return;
-		handleGameInput(deltaTime);	
+		if (paused) return;	
+		if (levelStartDelay > 0)
+			levelStartDelay -= deltaTime;
+		else
+			handleGameInput(deltaTime);	
 		level.update(deltaTime);
 		testColisions(deltaTime);
 		
+		if (isGameOver()){
+			Gdx.input.setCursorCatched(false);
+			backToMenu();
+		}
 		if(!isGameOver() && isBallLost())
 			ballLost();
-		else if (isGameOver() && isBallLost())
-			init();
 		
 	}
 
@@ -145,7 +159,11 @@ public class WorldController extends InputAdapter {
 
 	private void onCollisionBallWithPad(Ball ball, Pad pad) {		
 	
+		// variables for calculating side of collision on brick
+		float wy = 0;
+		float hx = 0;
 		
+		// math # Minkowski addition
 		wy = (ball.dimension.x + pad.dimension.x) * (ball.centerY() - pad.centerY()); 
 		hx = (ball.dimension.y + pad.dimension.y) * (ball.centerX() - pad.centerX()); 
 		
@@ -167,21 +185,36 @@ public class WorldController extends InputAdapter {
 	}
 
 	private void calculateBallAngle(Ball ball, Pad pad) {		
+		// variables for calculating ball angle bounce
+		float relativeIntersectionX = 0;
+		float normalizedRelativeIntersectionX = 0;
+		float bounceAngle = 0;
 		
-		intersectionX = (pad.position.x + (pad.dimension.x / 2)) - 
+		// math #.#		
+		// we get a negative or positive number of distance between the centers of pad and ball
+		relativeIntersectionX = (pad.position.x + (pad.dimension.x / 2)) - 
 				(ball.position.x + (ball.dimension.x / 2));
 		
-		normalizedIntersectionX = intersectionX;
-		bounceAngle = - normalizedIntersectionX * Constants.MAX_BOUNCE_ANGLE;
+		// we normalize the distance, so it's between, from -1 to 1 (important for proper angles)
+		normalizedRelativeIntersectionX = (relativeIntersectionX/(pad.dimension.x / 2));
+		// we get a bounce angle in degrees
+		bounceAngle = - normalizedRelativeIntersectionX * Constants.MAX_BOUNCE_ANGLE;
+		// we convert it to radians, math.sin/cos take in radians and not angle degrees
 		bounceAngle = (float) Math.toRadians(bounceAngle);
-			
+		
+		// we set the x and y to proper velocity for the so 
+		// their angle between their vectors in our bounce angle	
 		ball.velocity.x = (float) (Constants.MAX_BALL_VELOCITY * Math.sin(bounceAngle));
 		ball.velocity.y = (float) (Constants.MAX_BALL_VELOCITY * Math.cos(bounceAngle));
-		
+		// math.end()
 	}
 
 	private void onCollisionBallWithBrick(Ball ball, Brick brick) {		
-		
+		// variables for calculating side of collision on brick
+		float wy = 0;
+		float hx = 0;
+				
+		// math # Minkowski addition
 		wy = (ball.dimension.x + brick.dimension.x) * (ball.centerY() - brick.centerY()); 
 		hx = (ball.dimension.y + brick.dimension.y) * (ball.centerX() - brick.centerX()); 
 		
@@ -203,8 +236,7 @@ public class WorldController extends InputAdapter {
 			}
 		
 		brick.destroyed = true;
-		score++;
-		Gdx.app.log(TAG, "brick destroyed");		
+		score++;	
 	}
 
 	private void handleDebugInput(float deltaTime) {

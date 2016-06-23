@@ -1,0 +1,83 @@
+
+brickgame-ui.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bricks-title
+  rotate: false
+  xy: 2, 248
+  size: 432, 132
+  orig: 432, 132
+  offset: 0, 0
+  index: -1
+menu-art
+  rotate: false
+  xy: 2, 382
+  size: 575, 575
+  orig: 575, 575
+  offset: 0, 0
+  index: -1
+options-down
+  rotate: false
+  xy: 579, 877
+  size: 420, 80
+  orig: 420, 80
+  offset: 0, 0
+  index: -1
+options-hover
+  rotate: false
+  xy: 2, 166
+  size: 420, 80
+  orig: 420, 80
+  offset: 0, 0
+  index: -1
+options-up
+  rotate: false
+  xy: 579, 795
+  size: 420, 80
+  orig: 420, 80
+  offset: 0, 0
+  index: -1
+play-down
+  rotate: false
+  xy: 2, 84
+  size: 420, 80
+  orig: 420, 80
+  offset: 0, 0
+  index: -1
+play-hover
+  rotate: false
+  xy: 579, 713
+  size: 420, 80
+  orig: 420, 80
+  offset: 0, 0
+  index: -1
+play-up
+  rotate: false
+  xy: 2, 2
+  size: 420, 80
+  orig: 420, 80
+  offset: 0, 0
+  index: -1
+quit-down
+  rotate: false
+  xy: 579, 631
+  size: 420, 80
+  orig: 420, 80
+  offset: 0, 0
+  index: -1
+quit-hover
+  rotate: false
+  xy: 579, 549
+  size: 420, 80
+  orig: 420, 80
+  offset: 0, 0
+  index: -1
+quit-up
+  rotate: false
+  xy: 579, 467
+  size: 420, 80
+  orig: 420, 80
+  offset: 0, 0
+  index: -1
