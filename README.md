@@ -2,6 +2,7 @@
 My personal project for diploma thesis.
 
 Created with gradle using the libGDX framework.
+Open the Brick Game folder as an existing project. with the necessary libgdx plugins.
 
 Bricks.jar - is just a rough version of the main gameplay.
 Bricks-v0.0.jar - this one has a semi-working menu
