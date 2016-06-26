@@ -11,16 +11,19 @@ public class Constants {
 	public static final float VIEWPORT_GUI_HEIGHT = 720.0f;
 	
 	// max bounce angle
-	public static final float MAX_BOUNCE_ANGLE = 75.0f;
+	public static final float MAX_BOUNCE_ANGLE = 60.0f;
 	
 	// ball max velocity
-	public static final float MAX_BALL_VELOCITY = 5.0f;
+	public static final float MAX_BALL_VELOCITY = 7.5f;
 	
 	// lives
 	public static final int STARTING_LIVES = 3;
 	
-	// level start delay
-	public static final float LEVEL_START_DELAY = 0.1f;
+	// game over delay
+	public static final float TIME_DELAY_GAME_OVER = 3;
+	
+	// game victory delay
+	public static final float TIME_DELAY_VICTORY = 3;
 	
 	// atlas path
 	public static final String TEXTURE_ATLAS_OBJECTS = "images/brickgame.atlas";
@@ -31,7 +34,7 @@ public class Constants {
 	public static final String SKIN_BRICKGAME_UI = "images/brickgame-ui.json";
 	
 	// level path
-	public static final String LEVEL = "levels/level_color.png";
+	public static final String LEVEL = "levels/FastTest.png";
 	
 	// show fps
 	public static final boolean SHOW_FPS = true;

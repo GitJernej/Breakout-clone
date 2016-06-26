@@ -3,6 +3,7 @@ package com.jernej.erman.brickgame.game.objects;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.jernej.erman.brickgame.game.Assets;
+import com.jernej.erman.brickgame.util.Constants;
 
 public class Ball extends AbstractGameObject {
 
@@ -27,7 +28,7 @@ public class Ball extends AbstractGameObject {
 		bounds.set(0, 0, dimension.x, dimension.y);
 				
 		// set physics values
-		velocity.set(0.0f, -5.0f);
+		velocity.set(0.0f, - Constants.MAX_BALL_VELOCITY);
 	}
 	
 	public void setPosition (AbstractGameObject pad) {

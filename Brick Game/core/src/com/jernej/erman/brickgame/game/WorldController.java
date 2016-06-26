@@ -19,32 +19,30 @@ public class WorldController extends InputAdapter {
 	
 	boolean paused = false;
 	
+	boolean hasGameEnded;
 	
 	public Level level;
 	public int score;
 	public int lives;
+	
+	// number of blocks
+	public int bricksNumber;
 	
 	public CameraHelper cameraHelper;
 	
 	// rectangles for collision detection
 	private Rectangle r1 = new Rectangle();
 	private Rectangle r2 = new Rectangle();
-	
-
-	
-	// level start delay
-	float levelStartDelay;
-	
-
+		
+	// delays
+	private float timeLeftGameOverDelay;
 	
 	private Game game;
 	
 	private void backToMenu() {
 		// switch to menu screen
 		game.setScreen(new MenuScreen(game));
-	}
-	
-	
+	}	
 		
 	public WorldController(Game game){
 		this.game = game;
@@ -56,10 +54,16 @@ public class WorldController extends InputAdapter {
 		Gdx.input.setCursorCatched(true);
 		Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
-		levelStartDelay = Constants.LEVEL_START_DELAY;
 		lives = Constants.STARTING_LIVES;
 		score = 0;
+		timeLeftGameOverDelay = 0;
+		hasGameEnded = false;
+		//create level first...
 		initLevel();
+		// then get the number of blocks.
+		bricksNumber = level.bricks.size;
+		Gdx.app.debug(TAG, "number of bricks: " + bricksNumber);	
+
 	}
 	
 	private void initLevel () {
@@ -68,32 +72,33 @@ public class WorldController extends InputAdapter {
 	
 
 	public void update(float deltaTime){
-		if (Constants.DEBUG) handleDebugInput(deltaTime);		
+		if (Constants.DEBUG) handleDebugInput(deltaTime);	
+				
+		if((areBricksGone() || isGameOver() ) && !hasGameEnded){
+			hasGameEnded = true;
+			paused = true;
+			timeLeftGameOverDelay = Constants.TIME_DELAY_GAME_OVER;
+		}
+		
+		if(hasGameEnded && timeLeftGameOverDelay < 0){
+			Gdx.input.setCursorCatched(false);
+			backToMenu();
+		} else {
+			timeLeftGameOverDelay -= deltaTime;
+		}
+		
 		if (paused) return;	
-		if (levelStartDelay > 0)
-			levelStartDelay -= deltaTime;
-		else
-			handleGameInput(deltaTime);	
+		
+		handleGameInput(deltaTime);	
+				
 		level.update(deltaTime);
 		testColisions(deltaTime);
 		
-		if (isGameOver()){
-			Gdx.input.setCursorCatched(false);
-			backToMenu();
-		}
-		if(!isGameOver() && isBallLost())
-			ballLost();
-		
 	}
 
-	private void ballLost() {
-		level.ball.ballLocked = true;
-		level.ball.setPosition(level.pad);
-		lives--;		
-	}
-
-	private boolean isBallLost() {
-		return level.ball.position.y < - Constants.VIEWPORT_HEIGHT / 2;
+	private boolean areBricksGone() {
+		if(bricksNumber == 0) return true;
+		return false;
 	}
 
 	private boolean isGameOver() {
@@ -146,7 +151,12 @@ public class WorldController extends InputAdapter {
 			ball.position.y = Constants.VIEWPORT_HEIGHT / 2 - ball.dimension.y;
 		}
 		
-		// there is no bottom collision, it's a isBallLost condition.
+		// bottom collision
+		if(ball.position.y < - Constants.VIEWPORT_HEIGHT / 2){
+			level.ball.ballLocked = true;
+			level.ball.setPosition(level.pad);
+			lives--;	
+		}
 	}
 
 	private void testCollisionPadWithBounds(Pad pad) {
@@ -236,6 +246,8 @@ public class WorldController extends InputAdapter {
 			}
 		
 		brick.destroyed = true;
+		bricksNumber--;
+		Gdx.app.debug(TAG, "Brick destroyed\nnumber of bricks: " + bricksNumber);
 		score++;	
 	}
 
