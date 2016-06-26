@@ -9,6 +9,7 @@ to-do list:
 - options menu
 - screen transitions
 - Rework movement/rendering and colision detection.
+- more polishing
 
 ###Change notes
 
