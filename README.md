@@ -5,8 +5,8 @@ My personal project for diploma thesis. Created with Java using the libGDX frame
 #####Main important things
 * <s>win conditions/game-over</s> event
 * power-ups 
-  * speed up/down
-  * pad size increase/decrease
+ * speed up/down
+ * pad size increase/decrease
 * sound effects
 * transitions between scenes
 * options menu
