@@ -1,7 +1,7 @@
 # Breakout-clone
 My personal project for diploma thesis. Created with Java using the libGDX framework.
 
-to-do list: 
+###to-do list: 
 #####Main important things
 * <s>win conditions/game-over</s> event
 * power-ups 
