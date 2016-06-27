@@ -8,9 +8,9 @@ to-do list:
   * speed up/down
   * pad size increase/decrease
 * sound effects
-* transitions between scenes, menu/game...
+* transitions between scenes
 * options menu
- * to change starting ball speed
+ * change starting ball speed
  * sounds on/off
  
 #####Optional things
