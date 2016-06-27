@@ -2,12 +2,19 @@
 My personal project for diploma thesis. Created with Java using the libGDX framework.
 
 to-do list: 
-- <s>win conditions/game-over</s> event
-- increase ball speed according to blocks destroyed
+#####Main important things
+* <s>win conditions/game-over</s> event
+* power-ups 
+  * speed up/down
+  * pad size increase/decrease
+* sound effects
+* transitions between scenes, menu/game...
+* options menu
+ * to change starting ball speed
+ * sounds on/off
+ 
+#####Optional things
 - a way to select levels
-- sound effects
-- options menu
-- screen transitions
 - Rework movement/rendering and colision detection.
 - more polishing
 
