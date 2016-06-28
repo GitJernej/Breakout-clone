@@ -2,7 +2,6 @@ package com.jernej.erman.brickgame.game.objects;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -16,8 +15,8 @@ public abstract class AbstractGameObject {
 	public Color color;
 	
 	public Vector2 velocity;
-	public Vector2 terminalVelocity;
-	public Vector2 friction;
+	//public Vector2 terminalVelocity;
+	//public Vector2 friction;
 	
 	public Rectangle bounds;
 	
@@ -30,8 +29,6 @@ public abstract class AbstractGameObject {
 		color = new Color();
 		
 		velocity = new Vector2();
-		terminalVelocity = new Vector2();
-		friction = new Vector2();
 		
 		bounds = new Rectangle();
 	}	

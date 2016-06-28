@@ -37,6 +37,8 @@ public class WorldController extends InputAdapter {
 	// delays
 	private float timeLeftGameOverDelay;
 	
+	public float scoreVisual;
+	
 	private Game game;
 	
 	private void backToMenu() {
@@ -55,19 +57,22 @@ public class WorldController extends InputAdapter {
 		Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
 		lives = Constants.STARTING_LIVES;
-		score = 0;
+		
 		timeLeftGameOverDelay = 0;
 		hasGameEnded = false;
 		//create level first...
 		initLevel();
 		// then get the number of blocks.
-		bricksNumber = level.bricks.size;
-		Gdx.app.debug(TAG, "number of bricks: " + bricksNumber);	
-
+		
 	}
 	
 	private void initLevel () {
+		score = 0;
+		scoreVisual = score;
 		level = new Level(Constants.LEVEL);
+		bricksNumber = level.bricks.size;
+		Gdx.app.debug(TAG, "number of bricks in level: " + bricksNumber);	
+
 	}
 	
 
@@ -75,6 +80,7 @@ public class WorldController extends InputAdapter {
 		if (Constants.DEBUG) handleDebugInput(deltaTime);	
 				
 		if((areBricksGone() || isGameOver() ) && !hasGameEnded){
+			score += (Constants.LIVES_VALUE * lives);
 			hasGameEnded = true;
 			paused = true;
 			timeLeftGameOverDelay = Constants.TIME_DELAY_GAME_OVER;
@@ -93,6 +99,9 @@ public class WorldController extends InputAdapter {
 				
 		level.update(deltaTime);
 		testColisions(deltaTime);
+	
+		if (scoreVisual < score)
+			scoreVisual = Math.min(score, scoreVisual + Constants.BRICK_VALUE * deltaTime);
 		
 	}
 
@@ -247,9 +256,10 @@ public class WorldController extends InputAdapter {
 		
 		brick.destroyed = true;
 		bricksNumber--;
-		Gdx.app.debug(TAG, "Brick destroyed\nnumber of bricks: " + bricksNumber);
-		score++;	
+		
+		score += Constants.BRICK_VALUE;	
 	}
+
 
 	private void handleDebugInput(float deltaTime) {
 		float camMoveSpeed = 50 * deltaTime;
@@ -295,7 +305,7 @@ public class WorldController extends InputAdapter {
 
 		// pad mouse movement
 		if(Gdx.input.getDeltaX() != 0) 
-			level.pad.position.x += Gdx.input.getDeltaX() / 160.0f;
+			level.pad.position.x += Gdx.input.getDeltaX() / 160.0f;  // possible sensitivity option.
 		
 		// ball un-lock
 		if(level.ball.ballLocked)

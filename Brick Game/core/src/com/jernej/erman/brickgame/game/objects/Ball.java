@@ -1,5 +1,7 @@
 package com.jernej.erman.brickgame.game.objects;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.jernej.erman.brickgame.game.Assets;
@@ -9,6 +11,8 @@ public class Ball extends AbstractGameObject {
 
 	private TextureRegion regBall;
 	public boolean ballLocked;
+	
+	public ParticleEffect trailParticles = new ParticleEffect();
 		
 	public Ball () {
 		init();
@@ -29,6 +33,8 @@ public class Ball extends AbstractGameObject {
 				
 		// set physics values
 		velocity.set(0.0f, - Constants.MAX_BALL_VELOCITY);
+		
+		trailParticles.load(Gdx.files.internal("particles/particles.pfx"), Gdx.files.internal("particles"));
 	}
 	
 	public void setPosition (AbstractGameObject pad) {
@@ -41,12 +47,12 @@ public class Ball extends AbstractGameObject {
 	public void bounceY () {
 		velocity.y *= -1;
 	}
-	
-	
+		
 	@Override
 	public void update (float deltaTime){
-		if(ballLocked) return;
+		
 		super.update(deltaTime);
+		trailParticles.update(deltaTime);
 	}
 	
 	@Override
@@ -54,8 +60,11 @@ public class Ball extends AbstractGameObject {
 
 		TextureRegion reg = null;
 		
-		reg = regBall;
+		trailParticles.draw(batch);
 		
+		trailParticles.setPosition(position.x + dimension.x/2, position.y + dimension.y/2);
+		
+		reg = regBall;		
 		batch.draw(reg.getTexture(), position.x, position.y, origin.x, origin.y, 
 				dimension.x, dimension.y, scale.x, scale.y, rotation, 
 				reg.getRegionX(), reg.getRegionY(), reg.getRegionWidth(), reg.getRegionHeight(), 

@@ -25,10 +25,6 @@ public class Pad extends AbstractGameObject {
 		
 		// bounding box for collision detection
 		bounds.set(0, 0, dimension.x, dimension.y);
-		
-		// set physics values
-		terminalVelocity.set(16.0f, 0.0f);
-		friction.set(256.0f, 0.0f);
 	}
 	
 	public void setPosition() {

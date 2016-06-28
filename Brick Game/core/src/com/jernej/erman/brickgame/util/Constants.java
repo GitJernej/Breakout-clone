@@ -19,6 +19,12 @@ public class Constants {
 	// lives
 	public static final int STARTING_LIVES = 3;
 	
+	// score value of lives
+	public static final int LIVES_VALUE = 2500;
+	
+	// score value of bricks
+	public static final int BRICK_VALUE = 175;
+	
 	// game over delay
 	public static final float TIME_DELAY_GAME_OVER = 3;
 	
@@ -34,7 +40,7 @@ public class Constants {
 	public static final String SKIN_BRICKGAME_UI = "images/brickgame-ui.json";
 	
 	// level path
-	public static final String LEVEL = "levels/FastTest.png";
+	public static final String LEVEL = "levels/level_test.png";
 	
 	// show fps
 	public static final boolean SHOW_FPS = true;

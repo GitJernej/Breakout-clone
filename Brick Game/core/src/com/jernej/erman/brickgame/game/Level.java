@@ -84,10 +84,11 @@ public class Level {
 			brick.update(deltaTime);
 		}
 		pad.update(deltaTime);
+
+		ball.update(deltaTime);
+		
 		if(ball.ballLocked) 
 			ball.setPosition(pad);
-		else
-			ball.update(deltaTime);
 	}
 	
 	public void render (SpriteBatch batch) {

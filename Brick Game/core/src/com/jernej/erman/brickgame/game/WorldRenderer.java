@@ -65,8 +65,8 @@ public class WorldRenderer implements Disposable {
 		float x = 0;
 		float y = 0;
 		
-		Assets.instance.fonts.defaultBig.draw(batch, "" + 
-		worldController.score, x + 2, y + 36 );
+		Assets.instance.fonts.defaultBig.draw(batch, "" + (int)
+		worldController.scoreVisual, x + 2, y + 36 );
 	}
 	
 	private void renderExtraLives (SpriteBatch batch) {
