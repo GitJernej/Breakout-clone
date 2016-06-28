@@ -19,6 +19,11 @@ My personal project for diploma thesis. Created with Java using the libGDX frame
 - more polishing
 
 ###Change notes
+v0.2
+* changed the background color of the game screen from black to dark grey
+* added temporary particles to the ball
+* tried a new score counting mechanic
+* fixed the way ball got locked on the pad
 
 v0.1
 * removed the 0.1 sec delay at the start of level
