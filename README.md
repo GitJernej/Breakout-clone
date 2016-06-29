@@ -18,7 +18,12 @@ My personal project for diploma thesis. Created with Java using the libGDX frame
 - Rework movement/rendering and colision detection.
 - more polishing
 
+###Upcomming changes
+* temporary options window (foundation for later)
+
+
 ###Change notes
+
 v0.2
 * changed the background color of the game screen from black to dark grey
 * added temporary particles to the ball
