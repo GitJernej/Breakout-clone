@@ -20,6 +20,8 @@ My personal project for diploma thesis. Created with Java using the libGDX frame
 
 ###Upcomming changes
 * temporary options window (foundation for later)
+* game over text message
+* win message
 
 
 ###Change notes
