@@ -23,7 +23,7 @@ My personal project for diploma thesis. Created with Java using the libGDX frame
 * game over text message
 * win message
 * refactored the textures and atlases to be less wasteful
-
+* reworked colision detection
 
 ###Change notes
 
