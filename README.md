@@ -22,6 +22,7 @@ My personal project for diploma thesis. Created with Java using the libGDX frame
 * temporary options window (foundation for later)
 * game over text message
 * win message
+* refactored the textures and atlases to be less wasteful
 
 
 ###Change notes
