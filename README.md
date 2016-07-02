@@ -24,6 +24,7 @@ My personal project for diploma thesis. Created with Java using the libGDX frame
 * win message
 * refactored the textures and atlases to be less wasteful
 * reworked colision detection
+* set up foundation for power-ups
 
 ######Lessons learned:
 - Dont fix what's not broken.
