@@ -4,11 +4,12 @@ My personal project for diploma thesis. Created with Java using the libGDX frame
 ###to-do list: 
 #####Main important things
 * <s>win conditions/game-over</s> event
-* power-ups 
+* <s>power-ups 
  * speed up/down
- * <s>pad size increase/decrease</s>
+ * extra life
+ * pad size increase/decrease</s>
 * sound effects
-* transitions between scenes
+* <s>transitions between scenes</s>
 * options menu
  * change starting ball speed
  * sounds on/off
@@ -28,6 +29,7 @@ My personal project for diploma thesis. Created with Java using the libGDX frame
  * short/long pad
  * extra life
  * speed up/down
+* transisions between screens/scenes
 
 ######Lessons learned:
 - Dont fix what's not broken.
