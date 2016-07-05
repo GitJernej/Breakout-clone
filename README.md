@@ -34,7 +34,8 @@ My personal project for diploma thesis. Created with Java using the libGDX frame
 * transisions between screens/scenes
 
 ######Lessons learned:
-- Dont fix what's not broken.
+- Don't fix what's not broken.
+- Don't reinvent the wheel, "borrow" the blueprint and make your own!
 
 ###Change notes
 
