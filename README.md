@@ -13,10 +13,12 @@ My personal project for diploma thesis. Created with Java using the libGDX frame
 * options menu
  * change starting ball speed
  * sounds on/off
+* pause menu with return to menu/continue buttons
+* make the game over/win text prettier
  
 #####Optional things
 - a way to select levels
-- Rework movement/rendering and colision detection.
+- <s>Rework movement/rendering and colision detection.</s>
 - more polishing
 
 ###Upcomming changes
