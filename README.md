@@ -8,7 +8,7 @@ My personal project for diploma thesis. Created with Java using the libGDX frame
  * speed up/down
  * extra life
  * pad size increase/decrease</s>
-* sound effects
+* <s>sound effects</s>
 * <s>transitions between scenes</s>
 * options menu
  * change starting ball speed
@@ -32,6 +32,13 @@ My personal project for diploma thesis. Created with Java using the libGDX frame
  * extra life
  * speed up/down
 * transisions between screens/scenes
+* sound effects!
+ * block destroyed
+ * bounce pad/wall
+ * life lost
+ * power-up picked up
+* background music!
+* working options for sound/music volume level and on/off
 
 ######Lessons learned:
 - Don't fix what's not broken.
