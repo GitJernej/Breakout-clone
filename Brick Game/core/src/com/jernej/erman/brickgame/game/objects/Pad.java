@@ -16,15 +16,24 @@ public class Pad extends AbstractGameObject {
 	
 	private void init () {
 		dimension.set(1.6f, 0.2f);
-		
-		regPadCore = Assets.instance.padCore.padCore;
-		regPadEdge = Assets.instance.padEdge.padEdge;
+
+		regPadCore = Assets.instance.plainTexture.plainTexture;
+		regPadEdge = Assets.instance.plainTexture.plainTexture;
 		
 		// center image on game object
 		origin.set(dimension.x / 2, dimension.y / 2);
 		
 		// bounding box for collision detection
 		bounds.set(0, 0, dimension.x, dimension.y);
+	}
+	
+	public void resizePad(float factor){
+		if(dimension.x > 2.4f && factor > 1) return;
+		else if (dimension.x < 0.8f && factor < 1 ) return;
+
+		position.x = position.x - (dimension.x * factor - dimension.x)/2;
+		dimension.x = dimension.x * factor;
+		bounds.setWidth(dimension.x);
 	}
 	
 	public void setPosition() {

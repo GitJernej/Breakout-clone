@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Disposable;
 import com.jernej.erman.brickgame.util.Constants;
 
@@ -57,6 +58,8 @@ public class WorldRenderer implements Disposable {
 		
 		if(Constants.SHOW_FPS)	renderFpsCounter(batch);
 		
+		renderGuiGameEnded(batch);
+		
 		batch.end();
 	}
 	
@@ -65,7 +68,7 @@ public class WorldRenderer implements Disposable {
 		float x = 0;
 		float y = 0;
 		
-		Assets.instance.fonts.defaultBig.draw(batch, "" + (int)
+		Assets.instance.fonts.defaultNormal.draw(batch, "" + (int)
 		worldController.scoreVisual, x + 2, y + 36 );
 	}
 	
@@ -74,15 +77,17 @@ public class WorldRenderer implements Disposable {
 		float x = cameraGUI.viewportWidth;
 		float y = 0;
 		
-		Assets.instance.fonts.defaultBig.draw(batch, "" + 
+		if(worldController.lives > 9) x -= 25;
+		
+		Assets.instance.fonts.defaultNormal.draw(batch, "" + 
 		worldController.lives, x - 24, y + 36 );
 	}
 	
 	private void renderFpsCounter (SpriteBatch batch) {
 		float x = cameraGUI.viewportWidth - 100;
-		float y = cameraGUI.viewportHeight - 700;
+		float y = cameraGUI.viewportHeight - 25;
 		int fps = Gdx.graphics.getFramesPerSecond();
-		BitmapFont fpsFont = Assets.instance.fonts.defaultNormal;
+		BitmapFont fpsFont = Assets.instance.fonts.defaultSmall;
 		if (fps >= 45) {
 		// 45 or more FPS show up in green
 		fpsFont.setColor(0, 1, 0, 1);
@@ -95,6 +100,23 @@ public class WorldRenderer implements Disposable {
 		}
 		fpsFont.draw(batch, "FPS: " + fps, x, y);
 		fpsFont.setColor(1, 1, 1, 1); // white
+	}
+	
+	private void renderGuiGameEnded (SpriteBatch batch){		
+		if(worldController.hasGameEnded){
+			float x = cameraGUI.viewportHeight / 2;
+			float y = cameraGUI.viewportWidth / 2;
+			// draw game over message + score
+			BitmapFont fontGameEnded = Assets.instance.fonts.defaultBig;
+			if(worldController.isGameOver()){
+				fontGameEnded.setColor(150/255.0f, 25/255.0f, 25/255.0f, 1);
+				fontGameEnded.draw(batch, "game over\nscore: " + worldController.score, x, y);
+			} else {
+				fontGameEnded.setColor(150/255.0f, 25/255.0f, 25/255.0f, 1);
+				fontGameEnded.draw(batch, "victory!\nscore: " + worldController.score, x, y);	
+			}
+			fontGameEnded.setColor(1,1,1,1);
+		}
 	}
 
 

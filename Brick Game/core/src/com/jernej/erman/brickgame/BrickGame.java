@@ -6,9 +6,14 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.jernej.erman.brickgame.game.Assets;
+import com.jernej.erman.brickgame.screens.DirectedGame;
 import com.jernej.erman.brickgame.screens.MenuScreen;
+import com.jernej.erman.brickgame.screens.transitions.ScreenTransition;
+import com.jernej.erman.brickgame.screens.transitions.ScreenTransitionFade;
+import com.jernej.erman.brickgame.util.AudioManager;
+import com.jernej.erman.brickgame.util.GamePreferences;
 
-public class BrickGame extends Game {
+public class BrickGame extends DirectedGame {
 		
 	@Override
 	public void create() {
@@ -18,7 +23,12 @@ public class BrickGame extends Game {
 		// load assets
 		Assets.instance.init(new AssetManager());
 		
+		// load preferences for audio settings and star playing music
+		GamePreferences.instance.load();
+		AudioManager.instance.play(Assets.instance.music.song01);
+		
 		// start game at menu screen
-		setScreen(new MenuScreen(this));
+		ScreenTransition transition = ScreenTransitionFade.init(1.5f);
+		setScreen(new MenuScreen(this), transition);
 	}
 }

@@ -1,34 +1,48 @@
 
 brickgame.png
-size: 32,16
+size: 128,16
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-ball
+extraLife
   rotate: false
-  xy: 18, 11
+  xy: 2, 2
+  size: 19, 9
+  orig: 19, 9
+  offset: 0, 0
+  index: -1
+longPad
+  rotate: false
+  xy: 23, 2
+  size: 19, 9
+  orig: 19, 9
+  offset: 0, 0
+  index: -1
+plainTexture
+  rotate: false
+  xy: 107, 9
   size: 2, 2
   orig: 2, 2
   offset: 0, 0
   index: -1
-brick
+shortPad
   rotate: false
-  xy: 2, 6
-  size: 8, 3
-  orig: 8, 3
+  xy: 44, 2
+  size: 19, 9
+  orig: 19, 9
   offset: 0, 0
   index: -1
-pad_core
+speedDown
   rotate: false
-  xy: 2, 11
-  size: 14, 2
-  orig: 14, 2
+  xy: 65, 2
+  size: 19, 9
+  orig: 19, 9
   offset: 0, 0
   index: -1
-pad_edge
+speedUp
   rotate: false
-  xy: 2, 2
-  size: 1, 2
-  orig: 1, 2
+  xy: 86, 2
+  size: 19, 9
+  orig: 19, 9
   offset: 0, 0
   index: -1

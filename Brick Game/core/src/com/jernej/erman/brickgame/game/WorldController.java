@@ -3,19 +3,26 @@ package com.jernej.erman.brickgame.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Game;
+import com.jernej.erman.brickgame.screens.DirectedGame;
 import com.jernej.erman.brickgame.screens.MenuScreen;
+import com.jernej.erman.brickgame.screens.transitions.ScreenTransition;
+import com.jernej.erman.brickgame.screens.transitions.ScreenTransitionSlide;
 import com.jernej.erman.brickgame.game.objects.Ball;
 import com.jernej.erman.brickgame.game.objects.Brick;
 import com.jernej.erman.brickgame.game.objects.Pad;
+import com.jernej.erman.brickgame.game.objects.PowerUp;
+import com.jernej.erman.brickgame.util.AudioManager;
 import com.jernej.erman.brickgame.util.CameraHelper;
 import com.jernej.erman.brickgame.util.Constants;
 
 public class WorldController extends InputAdapter {
 
-	private static final String TAG = WorldController.class.getName();
+	private static final String TAG = WorldController.class.getName();	
 	
 	boolean paused = false;
 	
@@ -28,6 +35,8 @@ public class WorldController extends InputAdapter {
 	// number of blocks
 	public int bricksNumber;
 	
+	public Array<Brick> colidedBricks;
+	
 	public CameraHelper cameraHelper;
 	
 	// rectangles for collision detection
@@ -39,14 +48,16 @@ public class WorldController extends InputAdapter {
 	
 	public float scoreVisual;
 	
-	private Game game;
+	private DirectedGame game;
 	
 	private void backToMenu() {
 		// switch to menu screen
-		game.setScreen(new MenuScreen(game));
+		ScreenTransition transition = ScreenTransitionSlide.init(1.0f, 
+				ScreenTransitionSlide.DOWN, false, Interpolation.fade);
+		game.setScreen(new MenuScreen(game), transition);
 	}	
 		
-	public WorldController(Game game){
+	public WorldController(DirectedGame game){
 		this.game = game;
 		init();
 	}
@@ -54,13 +65,12 @@ public class WorldController extends InputAdapter {
 	private void init(){
 
 		Gdx.input.setCursorCatched(true);
-		Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
 		lives = Constants.STARTING_LIVES;
-		
+		colidedBricks = new Array<Brick>();
 		timeLeftGameOverDelay = 0;
 		hasGameEnded = false;
-		//create level first...
+		// create level first...
 		initLevel();
 		// then get the number of blocks.
 		
@@ -96,12 +106,12 @@ public class WorldController extends InputAdapter {
 		if (paused) return;	
 		
 		handleGameInput(deltaTime);	
-				
+
 		level.update(deltaTime);
 		testColisions(deltaTime);
-	
+		
 		if (scoreVisual < score)
-			scoreVisual = Math.min(score, scoreVisual + Constants.BRICK_VALUE * deltaTime);
+			scoreVisual = Math.min(score, scoreVisual + Constants.BRICK_VALUE * deltaTime * 10);
 		
 	}
 
@@ -110,36 +120,92 @@ public class WorldController extends InputAdapter {
 		return false;
 	}
 
-	private boolean isGameOver() {
+	public boolean isGameOver() {
 		return lives < 1;
 	}
 
 	private void testColisions(float deltaTime) {
-		
+				
 		// test collision: pad <-> game bounds
 		testCollisionPadWithBounds(level.pad);
 				
 		// Test collision: ball <-> game bounds
 		testCollisionBallWithBounds(level.ball);
 		
-		// ball rectangle 
-		r1.set(level.ball.position.x + level.ball.velocity.x * deltaTime, 
-				level.ball.position.y + level.ball.velocity.y * deltaTime, 
-				level.ball.bounds.width, level.ball.bounds.height);
+		
 		// pad rectangle
 		r2.set(level.pad.position.x, level.pad.position.y, level.pad.bounds.width, level.pad.bounds.height);
+
+
+		// collision powerUp with pad
+		for(PowerUp powerUp : level.powerUps){
+			if(powerUp.activated) continue;
+			r1.set(powerUp.position.x, powerUp.position.y, powerUp.dimension.x, powerUp.dimension.y);
+			if(r1.overlaps(r2)) activatePowerUp(powerUp);
+			if(powerUp.position.y < - Constants.VIEWPORT_HEIGHT / 2) removePowerUp(powerUp);
+		}
+		// ball rectangle 
+		r1.set(level.ball.position.x + level.ball.velocity.x * (deltaTime/2), 
+				level.ball.position.y + level.ball.velocity.y * (deltaTime/2), 
+				level.ball.bounds.width, level.ball.bounds.height);
 		
 		// collision ball with pad.
 		if(r1.overlaps(r2))
-			onCollisionBallWithPad(level.ball, level.pad);
+			calculateBallAngle(level.ball, level.pad);
 		
+		
+		// collision ball with bricks
 		for (Brick brick : level.bricks) {
-			if (brick.destroyed) continue;
+			if (brick.isDestroyed()) continue;
 			r2.set(brick.position.x, brick.position.y, brick.bounds.width, brick.bounds.height);
 			if (!r1.overlaps(r2)) continue;
-			onCollisionBallWithBrick(level.ball, brick);
+			spawnPowerUp(brick);
+			colidedBricks.add(brick);
+			AudioManager.instance.play(Assets.instance.sounds.brickDestroyed);
+			brick.destroyed();
+			bricksNumber--;		
+			score += Constants.BRICK_VALUE;	
+		}		
+		if(colidedBricks.size > 0) handleBallBrickCollisions(level.ball);
+	}
+
+	private void activatePowerUp(PowerUp powerUp) {
+
+		Gdx.app.debug(TAG, "number of active power ups" + level.powerUps.size);
+		switch(powerUp.type){
+		case SHORT_PAD:
+			level.pad.resizePad(0.85f);
+			break;
+		case LONG_PAD:
+			level.pad.resizePad(1.15f);
+			break;
+		case EXTRA_LIFE:
+			lives ++;
+			break;
+		case SPEED_UP:
+			level.ball.currentVelocity *= 1.25f;
+			break;
+		case SPEED_DOWN:
+			level.ball.currentVelocity *= 0.75f;
 			break;
 		}
+		powerUp.activated = true;
+		removePowerUp(powerUp);
+		
+		AudioManager.instance.play(Assets.instance.sounds.powerUp);		
+	}
+
+	private void removePowerUp(PowerUp powerUp) {	
+		level.powerUps.removeIndex(level.powerUps.indexOf(powerUp, true));
+		Gdx.app.debug(TAG, "number of active power ups" + level.powerUps.size);
+	}
+
+	private void spawnPowerUp(Brick brick) {
+		// chance for power up spawn 0.00 to 1.00
+		if(Math.random() < 0.15){
+			level.powerUps.add(new PowerUp(brick));
+		}
+		
 	}
 
 	private void testCollisionBallWithBounds(Ball ball) {
@@ -163,8 +229,11 @@ public class WorldController extends InputAdapter {
 		// bottom collision
 		if(ball.position.y < - Constants.VIEWPORT_HEIGHT / 2){
 			level.ball.ballLocked = true;
+			level.ball.currentVelocity = Constants.START_BALL_BELOCITY;
 			level.ball.setPosition(level.pad);
-			lives--;	
+			lives--;
+			
+			AudioManager.instance.play(Assets.instance.sounds.lostLife);
 		}
 	}
 
@@ -176,32 +245,6 @@ public class WorldController extends InputAdapter {
 		
 	}
 
-	private void onCollisionBallWithPad(Ball ball, Pad pad) {		
-	
-		// variables for calculating side of collision on brick
-		float wy = 0;
-		float hx = 0;
-		
-		// math # Minkowski addition
-		wy = (ball.dimension.x + pad.dimension.x) * (ball.centerY() - pad.centerY()); 
-		hx = (ball.dimension.y + pad.dimension.y) * (ball.centerX() - pad.centerX()); 
-		
-		if(wy > hx)
-			if(wy > -hx) { // top
-				calculateBallAngle(ball, pad);
-				ball.position.y = pad.position.y + pad.dimension.y;
-			} else  // left
-				ball.position.x = pad.position.x - ball.dimension.x;
-			
-		else
-			if (wy > -hx)  // right
-				ball.position.x = pad.position.x + pad.dimension.x;
-			
-		/*
-			else // bottom ~ this should not happen.
-				ball.bounceY();
-		*/
-	}
 
 	private void calculateBallAngle(Ball ball, Pad pad) {		
 		// variables for calculating ball angle bounce
@@ -223,43 +266,64 @@ public class WorldController extends InputAdapter {
 		
 		// we set the x and y to proper velocity for the so 
 		// their angle between their vectors in our bounce angle	
-		ball.velocity.x = (float) (Constants.MAX_BALL_VELOCITY * Math.sin(bounceAngle));
-		ball.velocity.y = (float) (Constants.MAX_BALL_VELOCITY * Math.cos(bounceAngle));
+		ball.velocity.x = (float) (ball.currentVelocity * Math.sin(bounceAngle));
+		ball.velocity.y = (float) (ball.currentVelocity * Math.cos(bounceAngle));
 		// math.end()
+		
+		AudioManager.instance.play(Assets.instance.sounds.bounce);
 	}
 
-	private void onCollisionBallWithBrick(Ball ball, Brick brick) {		
-		// variables for calculating side of collision on brick
-		float wy = 0;
-		float hx = 0;
-				
-		// math # Minkowski addition
-		wy = (ball.dimension.x + brick.dimension.x) * (ball.centerY() - brick.centerY()); 
-		hx = (ball.dimension.y + brick.dimension.y) * (ball.centerX() - brick.centerX()); 
+	private void handleBallBrickCollisions(Ball ball) {		
+		
+		switch(colidedBricks.size){
+		case 1:
+			onBallOneBrick(ball, colidedBricks.get(0));
+			break;
+		case 2: 
+			onBallTwoBricks(ball, colidedBricks.get(0), colidedBricks.get(1));
+			break;
+		case 3: // on collision with three bricks, only happens when ball hits a corner
+				// and should in all cases bounce back in the same direction in came from
+			ball.bounceX();
+			ball.bounceY();
+			break;
+		default:
+			Gdx.app.debug(TAG, "Unknown collision with " + colidedBricks.size + "bricks");
+		}		
+		colidedBricks.clear();
+	}
+
+	private void onBallTwoBricks(Ball ball, Brick brick1, Brick brick2) {
+		
+		if(brick1.centerX() == brick2.centerX())
+			ball.bounceX();
+		else
+			ball.bounceY();
+		
+		
+	}
+
+	private void onBallOneBrick(Ball ball, Brick brick) {
+		
+		float wy = 0.5f * (ball.dimension.x + brick.dimension.x) * (ball.centerY() - brick.centerY());
+		float hx = 0.5f * (ball.dimension.y + brick.dimension.y) * (ball.centerX() - brick.centerX());
 		
 		if(wy > hx)
 			if(wy > -hx){
-				ball.bounceY(); // top
-				ball.position.y = brick.position.y + brick.dimension.y;
-			}else{
-				ball.bounceX(); // left
-				ball.position.x = brick.position.x - ball.dimension.x;
-			}
-		else
-			if (wy > -hx){
-				ball.bounceX(); // right
-				ball.position.x = brick.position.x + brick.dimension.x;
-			}else{
-				ball.bounceY(); // bottom
-				ball.position.y = brick.position.y - ball.dimension.y;
-			}
-		
-		brick.destroyed = true;
-		bricksNumber--;
-		
-		score += Constants.BRICK_VALUE;	
+				ball.bounceY();
+				}
+			else{
+				ball.bounceX();
+				}
+		else{
+			if(wy > -hx){
+				ball.bounceX();
+				}
+			else{
+				ball.bounceY();
+				}
+		}	
 	}
-
 
 	private void handleDebugInput(float deltaTime) {
 		float camMoveSpeed = 50 * deltaTime;

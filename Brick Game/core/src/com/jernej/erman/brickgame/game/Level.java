@@ -8,6 +8,7 @@ import com.jernej.erman.brickgame.game.objects.AbstractGameObject;
 import com.jernej.erman.brickgame.game.objects.Ball;
 import com.jernej.erman.brickgame.game.objects.Brick;
 import com.jernej.erman.brickgame.game.objects.Pad;
+import com.jernej.erman.brickgame.game.objects.PowerUp;
 
 public class Level {
 	public static final String TAG = Level.class.getName();
@@ -30,7 +31,7 @@ public class Level {
 		}
 	}
 	
-	
+	public Array<PowerUp> powerUps;
 	public Array<Brick> bricks;
 	public Pad pad;
 	public Ball ball;
@@ -40,6 +41,7 @@ public class Level {
 	}
 	
 	private void init (String filename){
+		powerUps = new Array<PowerUp>();
 		bricks = new Array<Brick>();
 		pad = new Pad();
 		ball = new Ball();
@@ -59,11 +61,7 @@ public class Level {
 				
 				int currentPixel = pixmap.getPixel(pixelX, pixelY);
 				
-				if (BLOCK_TYPE.EMPTY.sameColor(currentPixel)){
-					// do nothing
-				}
-				
-				else {
+				if (!BLOCK_TYPE.EMPTY.sameColor(currentPixel)){
 					obj = new Brick();
 					// 8 away from center, 0.025f away from the vertical edge
 					// 4 away from center, 0.175f away from top horizontal edge.
@@ -80,6 +78,9 @@ public class Level {
 	}
 	
 	public void update (float deltaTime) {
+		for (PowerUp powerUp : powerUps)
+			powerUp.update(deltaTime);
+		
 		for (Brick brick : bricks){
 			brick.update(deltaTime);
 		}
@@ -92,11 +93,15 @@ public class Level {
 	}
 	
 	public void render (SpriteBatch batch) {
-		for (Brick brick : bricks){
+		for (PowerUp powerUp : powerUps)
+			powerUp.render(batch);
+		
+		for (Brick brick : bricks)
 			brick.render(batch);
-		}
+		
 		pad.render(batch);
 		ball.render(batch);
+		
 		
 	}
 	

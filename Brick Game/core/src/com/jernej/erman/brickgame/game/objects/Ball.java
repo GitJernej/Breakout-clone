@@ -5,12 +5,15 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.jernej.erman.brickgame.game.Assets;
+import com.jernej.erman.brickgame.util.AudioManager;
 import com.jernej.erman.brickgame.util.Constants;
 
 public class Ball extends AbstractGameObject {
 
 	private TextureRegion regBall;
 	public boolean ballLocked;
+	
+	public float currentVelocity;
 	
 	public ParticleEffect trailParticles = new ParticleEffect();
 		
@@ -20,10 +23,11 @@ public class Ball extends AbstractGameObject {
 	
 	private void init(){
 		ballLocked = true;
+		currentVelocity = Constants.START_BALL_BELOCITY;
 		
 		dimension.set(0.2f, 0.2f);
 		
-		regBall = Assets.instance.ball.ball;
+		regBall = Assets.instance.plainTexture.plainTexture;
 		
 		// center image on the object
 		origin.set(dimension.x / 2, dimension.y / 2);
@@ -31,21 +35,24 @@ public class Ball extends AbstractGameObject {
 		// bounding box for collision detection
 		bounds.set(0, 0, dimension.x, dimension.y);
 				
-		// set physics values
-		velocity.set(0.0f, - Constants.MAX_BALL_VELOCITY);
+		// set starting velocity
+		velocity.set(0.0f, - currentVelocity);
 		
+		// load trail particle
 		trailParticles.load(Gdx.files.internal("particles/particles.pfx"), Gdx.files.internal("particles"));
 	}
 	
 	public void setPosition (AbstractGameObject pad) {
-		position.set(pad.position.x + pad.dimension.x / 2, pad.position.y + pad.dimension.y);
+		position.set(pad.position.x + (pad.dimension.x / 2) - this.dimension.y/2, pad.position.y + pad.dimension.y);
 	}
 	
 	public void bounceX () {
-		velocity.x *= -1;
+		velocity.x = -velocity.x;
+		AudioManager.instance.play(Assets.instance.sounds.bounce);
 	}
 	public void bounceY () {
-		velocity.y *= -1;
+		velocity.y = -velocity.y;
+		AudioManager.instance.play(Assets.instance.sounds.bounce);
 	}
 		
 	@Override

@@ -15,8 +15,8 @@ public class DesktopLauncher {
 		
 		if(rebuildAtlas){
 			Settings settings = new Settings();
-			settings.maxWidth = 2048;
-			settings.maxHeight = 2048;
+			settings.maxWidth = 1024;
+			settings.maxHeight = 1024;
 			settings.duplicatePadding = false;
 			settings.debug = drawDebugOutline;
 			TexturePacker.process(settings, "assets-raw/images", "assets/images", "brickgame");

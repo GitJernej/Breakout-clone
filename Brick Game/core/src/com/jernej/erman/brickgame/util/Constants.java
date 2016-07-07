@@ -13,39 +13,47 @@ public class Constants {
 	// max bounce angle
 	public static final float MAX_BOUNCE_ANGLE = 60.0f;
 	
-	// ball max velocity
-	public static final float MAX_BALL_VELOCITY = 7.5f;
+	// ball velocity limits
+	public static final float MAX_BALL_VELOCITY = 15;
+	public static final float MIN_BALL_VELOCITY = 5;
+	public static final float START_BALL_BELOCITY = 7.5f;
 	
 	// lives
 	public static final int STARTING_LIVES = 3;
 	
 	// score value of lives
-	public static final int LIVES_VALUE = 2500;
+	public static final int LIVES_VALUE = 500;
 	
 	// score value of bricks
-	public static final int BRICK_VALUE = 175;
+	public static final int BRICK_VALUE = 75;
 	
 	// game over delay
 	public static final float TIME_DELAY_GAME_OVER = 3;
-	
-	// game victory delay
-	public static final float TIME_DELAY_VICTORY = 3;
-	
+		
 	// atlas path
 	public static final String TEXTURE_ATLAS_OBJECTS = "images/brickgame.atlas";
 	
-	// scene2d resources
-	public static final String TEXTURE_ATLAS_UI = "images/brickgame-ui.atlas";
-	
+	// scene2d resources (main menu...)
+	public static final String TEXTURE_ATLAS_UI = "images/brickgame-ui.atlas";	
 	public static final String SKIN_BRICKGAME_UI = "images/brickgame-ui.json";
 	
-	// level path
-	public static final String LEVEL = "levels/level_test.png";
+	// skins resources (options menu....)
+	public static final String TEXTURE_ATLAS_LIBGDX_UI = "images/uiskin.atlas";
+	public static final String SKIN_LIBGDX_UI = "images/uiskin.json";
+	
+	// TEST LEVEL
+	//public static final String LEVEL = "levels/level_test.png";
+	
+	// actual level
+	public static final String LEVEL = "levels/simple.png";
 	
 	// show fps
 	public static final boolean SHOW_FPS = true;
 	
 	// is camera helper active
 	public static final boolean DEBUG = false;
+	
+	// game preferences file
+	public static final String PREFERENCES = "bricks.prefs";
 
 }

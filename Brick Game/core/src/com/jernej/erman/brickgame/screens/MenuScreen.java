@@ -3,24 +3,39 @@ package com.jernej.erman.brickgame.screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.jernej.erman.brickgame.screens.transitions.ScreenTransition;
+import com.jernej.erman.brickgame.screens.transitions.ScreenTransitionSlide;
+import com.jernej.erman.brickgame.util.AudioManager;
 import com.jernej.erman.brickgame.util.Constants;
+import com.jernej.erman.brickgame.util.GamePreferences;
 
 public class MenuScreen extends AbstractGameScreen {
 	private static final String TAG = MenuScreen.class.getName();
 	
 	private Stage stage;
 	private Skin skinBrickgame;
+	private Skin skinLibgdx;
 		
 	// menu
 	private Image imgMenuArt;
@@ -29,23 +44,70 @@ public class MenuScreen extends AbstractGameScreen {
 	private Button btnOptions;
 	private Button btnQuit;
 	
+	// options
+	private Window winOptions;
+	private TextButton btnWinOptSave;
+	private TextButton btnWinOptCancel;
+	private CheckBox chkSound;
+	private Slider sldSound;
+	private CheckBox chkMusic;
+	private Slider sldMusic;
+	private CheckBox chkShowFpsCounter;
+	
+	
 	// debug
 	private final float DEBUG_REBUILD_INTERVAL = 5.0f;
 	private boolean debugEnabled = false;
 	private float debugRebuildStage;
 
-	public MenuScreen(Game game) {
+	public MenuScreen(DirectedGame game) {
 		super(game);
 	}
 	
+	private void loadSettings () {
+		Gdx.app.debug("TAG", "load settings started");
+		GamePreferences prefs = GamePreferences.instance;
+		prefs.load();
+		chkSound.setChecked(prefs.sound);
+		sldSound.setValue(prefs.volSound);
+		chkMusic.setChecked(prefs.music);
+		sldMusic.setValue(prefs.volMusic);
+		chkShowFpsCounter.setChecked(prefs.showFpsCounter);
+	}
+
+	private void saveSettings () {
+		GamePreferences prefs = GamePreferences.instance;
+		
+		prefs.sound = chkSound.isChecked();
+		prefs.volSound = sldSound.getValue();
+		prefs.music = chkMusic.isChecked();
+		prefs.volMusic = sldMusic.getValue();
+		prefs.showFpsCounter = chkShowFpsCounter.isChecked();
+		prefs.save();
+	}
+	
+	private void onSaveClicked() {
+		saveSettings();
+		onCancelClicked();
+		AudioManager.instance.onSettingsUpdated();
+	}
+	
+	private void onCancelClicked() {
+		winOptions.setVisible(false);
+		AudioManager.instance.onSettingsUpdated();
+	}
+
 	private void rebuildStage () {
 		skinBrickgame = new Skin(
 				Gdx.files.internal(Constants.SKIN_BRICKGAME_UI), 
 				new TextureAtlas(Constants.TEXTURE_ATLAS_UI));
+		skinLibgdx = new Skin(Gdx.files.internal(Constants.SKIN_LIBGDX_UI), 
+				new TextureAtlas(Constants.TEXTURE_ATLAS_LIBGDX_UI));
 		
 		// build all layers
 		Table layerBackground = buildBackgroundLayer();
 		Table layerButton = buildButtonLayer();
+		Table layerOptionsWindow = buildOptionsWindowLayer();
 		
 		// assemble stage for menu screen
 		stage.clear();
@@ -54,9 +116,121 @@ public class MenuScreen extends AbstractGameScreen {
 		stack.setSize(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT);
 		stack.add(layerBackground);
 		stack.add(layerButton);
+		stage.addActor(layerOptionsWindow);
 		
 	}
 	
+	private Table buildOptWinAudioSettings() {
+		Table tbl = new Table();
+		// title: "audio"
+		tbl.pad(10,10,0,10);
+		tbl.add(new Label("Audio", skinLibgdx, "default-font", Color.ORANGE)).colspan(3);
+		tbl.row();
+		tbl.columnDefaults(0).padRight(10);
+		tbl.columnDefaults(1).padRight(10);
+		
+		// checkbox, "sound" label, sound volume slider
+		chkSound = new CheckBox("", skinLibgdx);
+		tbl.add(chkSound);
+		tbl.add(new Label ("Sound", skinLibgdx));
+		
+		sldSound = new Slider (0.0f, 1.0f, 0.1f, false, skinLibgdx);
+		tbl.add(sldSound);
+		tbl.row();
+		
+		// checkbox, "music" label, music volume slider
+		chkMusic = new CheckBox("", skinLibgdx);
+		tbl.add(chkMusic);
+		tbl.add(new Label("Music", skinLibgdx));
+		
+		sldMusic = new Slider(0.0f, 1.0f, 0.1f, false, skinLibgdx);
+		tbl.add(sldMusic);
+		tbl.row();
+		
+		return tbl;
+	}
+	
+	private Table buildOptWinDebug() {
+		Table tbl = new Table();
+		// title "debug"
+		tbl.pad(10,10,0,10);
+		tbl.add(new Label ("Debug", skinLibgdx, "default-font", Color.RED)).colspan(3);
+		tbl.row();
+		tbl.columnDefaults(0).padRight(10);
+		tbl.columnDefaults(1).padRight(10);
+		
+		// checkbox, "show fps counter" label
+		chkShowFpsCounter = new CheckBox("", skinLibgdx);
+		tbl.add(new Label ("Show FPS Counter", skinLibgdx));
+		tbl.add(chkShowFpsCounter);
+		tbl.row();
+		return tbl;
+	}
+	
+	private Table buildOptWinButtons () {
+		Table tbl = new Table();
+		// separator
+		Label lbl = null;
+		lbl = new Label("", skinLibgdx);
+		lbl.setColor(0.75f, 0.75f, 0.75f, 1);
+		lbl.setStyle(new LabelStyle(lbl.getStyle()));
+		lbl.getStyle().background = skinLibgdx.newDrawable("white");
+		tbl.add(lbl).colspan(2).height(1).width(220).pad(0,0,0,1);
+		tbl.row();
+		
+		lbl=new Label("", skinLibgdx);
+		lbl.setColor(0.5f, 0.5f, 0.5f, 1);
+		lbl.setStyle(new LabelStyle(lbl.getStyle()));
+		lbl.getStyle().background = skinLibgdx.newDrawable("white");
+		tbl.add(lbl).colspan(2).height(1).width(220).pad(0, 1, 5, 0);
+		tbl.row();
+		
+		// save button with event handler
+		btnWinOptSave = new TextButton("Save", skinLibgdx);
+		tbl.add(btnWinOptSave).padRight(30);
+		btnWinOptSave.addListener(new ChangeListener () {
+			@Override
+			public void changed (ChangeEvent event, Actor actor){
+				onSaveClicked();
+			}
+		});
+		
+		// Cancel button with event handler
+		btnWinOptCancel = new TextButton("Cancel", skinLibgdx);
+		tbl.add(btnWinOptCancel);
+		btnWinOptCancel.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor){
+				onCancelClicked();
+			}
+		});
+		return tbl;
+	}
+	
+	private Table buildOptionsWindowLayer() {
+		winOptions = new Window("Options", skinLibgdx);
+		
+		// audio settings: sound/music checkbox with slider
+		winOptions.add(buildOptWinAudioSettings()).row();
+		
+		// debug: show fps counter
+		winOptions.add(buildOptWinDebug()).row();
+		
+		// seperator and buttons: save, cancel.
+		winOptions.add(buildOptWinButtons()).pad(10,0,10,0);
+		
+		// make options window slighty transparent
+		winOptions.setColor(1,1,1,0.8f);
+		// hide options window by default
+		winOptions.setVisible(false);
+		if (debugEnabled) winOptions.debug();
+		// let TableLayout recalculate widget sizes and positions
+		winOptions.pack();
+		// move options window to bottom right corner
+		winOptions.setPosition(Constants.VIEWPORT_GUI_WIDTH - winOptions.getWidth() - 50, 50);
+		
+		return winOptions;
+	}
 
 
 	private Table buildBackgroundLayer() {
@@ -125,12 +299,15 @@ public class MenuScreen extends AbstractGameScreen {
 	}
 
 	protected void onOptionsClicked() {
-		// TODO Auto-generated method stub
+		loadSettings();
+		winOptions.setVisible(true);
 		
 	}
 
 	protected void onPlayClicked() {
-		game.setScreen(new GameScreen(game));
+		ScreenTransition transition = ScreenTransitionSlide.init(1.0f, 
+				ScreenTransitionSlide.DOWN, false, Interpolation.fade);
+		game.setScreen(new GameScreen(game), transition);
 		
 	}
 
@@ -160,15 +337,20 @@ public class MenuScreen extends AbstractGameScreen {
 	
 	@Override	public void show() {
 		stage = new Stage(new StretchViewport(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT));
-		Gdx.input.setInputProcessor(stage);
 		rebuildStage();
 	}
 	
 	@Override	public void hide() {
 		stage.dispose();
 		skinBrickgame.dispose();
+		skinLibgdx.dispose();
 	}
 	
 	@Override	public void pause() {}
+	
+	@Override
+	public InputProcessor getInputProcessor () {
+		return stage;
+	}
 
 }

@@ -8,7 +8,7 @@ public class Brick extends AbstractGameObject {
 
 	private TextureRegion regBrick;
 	
-	public boolean destroyed;
+	private boolean destroyed;
 	
 	public Brick () {
 		init();
@@ -18,13 +18,13 @@ public class Brick extends AbstractGameObject {
 		dimension.set(0.95f, 0.3f);
 		destroyed = false;
 		
+		regBrick = Assets.instance.plainTexture.plainTexture;
 		// center image on object
+		
 		origin.set(dimension.x / 2, dimension.y / 2);
 		
 		// bounding box for collision detection
 		bounds.set(0, 0, dimension.x, dimension.y);
-		
-		regBrick = Assets.instance.brick.brick;
 	}
 	
 	
@@ -43,6 +43,14 @@ public class Brick extends AbstractGameObject {
 				false, false);
 		// reset color
 		batch.setColor(1, 1, 1, 1);
+	}
+	
+	public void destroyed(){
+		destroyed = true;
+	}
+	
+	public boolean isDestroyed(){
+		return destroyed;
 	}
 
 }

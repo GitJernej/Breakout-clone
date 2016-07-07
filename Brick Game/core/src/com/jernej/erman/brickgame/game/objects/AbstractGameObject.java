@@ -15,8 +15,6 @@ public abstract class AbstractGameObject {
 	public Color color;
 	
 	public Vector2 velocity;
-	//public Vector2 terminalVelocity;
-	//public Vector2 friction;
 	
 	public Rectangle bounds;
 	
@@ -34,11 +32,11 @@ public abstract class AbstractGameObject {
 	}	
 	
 	public float centerX(){
-		return position.x + dimension.x / 2;
+		return position.x + (dimension.x / 2);
 	}
 	
 	public float centerY(){
-		return position.y + dimension.y / 2;
+		return position.y + (dimension.y / 2);
 	}
 	
 	public void update (float deltaTime) {

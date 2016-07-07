@@ -2,6 +2,7 @@ package com.jernej.erman.brickgame.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.jernej.erman.brickgame.game.WorldController;
 import com.jernej.erman.brickgame.game.WorldRenderer;
@@ -15,7 +16,7 @@ public class GameScreen extends AbstractGameScreen {
 	
 	private boolean paused;
 	
-	public GameScreen (Game game) {
+	public GameScreen (DirectedGame game) {
 		super(game);
 	}
 
@@ -63,6 +64,11 @@ public class GameScreen extends AbstractGameScreen {
 		super.resume();
 		// only called on Android
 		paused = false;
+	}
+	
+	@Override
+	public InputProcessor getInputProcessor () {
+		return worldController;
 	}
 	
 }
