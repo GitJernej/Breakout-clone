@@ -22,12 +22,22 @@ My personal project for diploma thesis. Created with Java using the libGDX frame
 - more polishing
 
 ###Upcomming changes
-* temporary options window (foundation for later)
-* game over text message
-* win message
-* refactored the textures and atlases to be less wasteful
-* reworked colision detection
-* set up foundation for power-ups
+* comming soon :)
+
+######Lessons learned:
+- Don't fix what's not broken.
+- Don't reinvent the wheel, "borrow" the blueprint and make your own!
+
+###Change notes
+
+v0.3
+* rough options window
+* game over/win text message with total score
+* refactored the code for textures and atlases to be less wasteful
+* reworked colision detection 
+ * ball does not teleport anymore
+ * more accurate colision detection (can destroy multiple blocks at the same time)
+* power-ups
  * short/long pad
  * extra life
  * speed up/down
@@ -39,12 +49,6 @@ My personal project for diploma thesis. Created with Java using the libGDX frame
  * power-up picked up
 * background music!
 * working options for sound/music volume level and on/off
-
-######Lessons learned:
-- Don't fix what's not broken.
-- Don't reinvent the wheel, "borrow" the blueprint and make your own!
-
-###Change notes
 
 v0.2
 * changed the background color of the game screen from black to dark grey
