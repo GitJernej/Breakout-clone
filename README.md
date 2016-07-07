@@ -10,11 +10,11 @@ My personal project for diploma thesis. Created with Java using the libGDX frame
  * pad size increase/decrease</s>
 * <s>sound effects</s>
 * <s>transitions between scenes</s>
-* options menu
+* <s>options menu</s>
  * change starting ball speed
- * sounds on/off
+ * <s>sounds on/off</s>
 * pause menu with return to menu/continue buttons
-* make the game over/win text prettier
+* make the game over/win text Better.
  
 #####Optional things
 - a way to select levels
