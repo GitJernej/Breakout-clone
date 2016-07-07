@@ -3,18 +3,11 @@ My personal project for diploma thesis. Created with Java using the libGDX frame
 
 ###to-do list: 
 #####Main important things
-* <s>win conditions/game-over</s> event
-* <s>power-ups 
- * speed up/down
- * extra life
- * pad size increase/decrease</s>
-* <s>sound effects</s>
-* <s>transitions between scenes</s>
 * <s>options menu</s>
  * change starting ball speed
  * <s>sounds on/off</s>
-* pause menu with return to menu/continue buttons
-* make the game over/win text Better.
+* pause menu with return to continue/menu/quit buttons
+* make the game over/win text look/work better
  
 #####Optional things
 - a way to select levels
