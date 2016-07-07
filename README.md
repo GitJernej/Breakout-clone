@@ -35,7 +35,7 @@ v0.3
  * short/long pad
  * extra life
  * speed up/down
-* transisions between screens/scenes
+* transitions between screens/scenes
 * sound effects!
  * block destroyed
  * bounce pad/wall
