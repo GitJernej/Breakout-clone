@@ -24,13 +24,14 @@ My personal project for diploma thesis. Created with Java using the libGDX frame
 ###Change notes
 
 v0.3
+* new level
 * rough options window
 * game over/win text message with total score
 * refactored the code for textures and atlases to be less wasteful
 * reworked colision detection 
  * ball does not teleport anymore
  * more accurate colision detection (can destroy multiple blocks at the same time)
-* power-ups
+* power-ups (15% chance on destroyed block to spawn a random power-up)
  * short/long pad
  * extra life
  * speed up/down
