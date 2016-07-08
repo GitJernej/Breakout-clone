@@ -15,7 +15,7 @@ My personal project for diploma thesis. Created with Java using the libGDX frame
 - more polishing
 
 ###Upcomming changes
-* comming soon :)
+* animation for destroyed bricks
 
 ######Lessons learned:
 - Don't fix what's not broken.
