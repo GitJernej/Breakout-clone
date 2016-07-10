@@ -17,8 +17,8 @@ My personal project for diploma thesis. Created with Java using the libGDX frame
 ###Upcomming changes
 * animation for destroyed bricks
 * when game has ended, the ball gradualy slows down
-* pause opens a window with options to either return to menu or resume the game
-* better win/lose events
+* ... fix #1 ... soon
+* ... fix #2 ... soon
 
 ######Lessons learned:
 - Don't fix what's not broken.
