@@ -3,22 +3,19 @@ My personal project for diploma thesis. Created with Java using the libGDX frame
 
 ###to-do list: 
 #####Main important things
-* <s>options menu</s>
- * change starting ball speed
- * <s>sounds on/off</s>
-* pause menu with return to continue/menu/quit buttons
-* make the game over/win text look/work better
+* improve the looks...
+* Testing
+* Bugs
+
  
 #####Optional things
-- a way to select levels
-- <s>Rework movement/rendering and colision detection.</s>
-- more polishing
+- a way to select levels... Maybe.
 
 ###Upcomming changes
 * animation for destroyed bricks
 * when game has ended, the ball gradualy slows down
-* ... fix #1 ... soon
-* ... fix #2 ... soon
+* improved the looks of game won/lost message
+* improvised a meaningful pause/unpause screen
 
 ######Lessons learned:
 - Don't fix what's not broken.
