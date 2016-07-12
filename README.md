@@ -16,6 +16,8 @@ My personal project for diploma thesis. Created with Java using the libGDX frame
 * when game has ended, the ball gradualy slows down
 * improved the looks of game won/lost message
 * improvised a meaningful pause/unpause screen
+* LEVEL SELECTION!
+ * having problems, the buttons dont appear when I extract the app to .jar file...  
 
 ######Lessons learned:
 - Don't fix what's not broken.
