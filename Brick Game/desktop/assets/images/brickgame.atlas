@@ -1,47 +1,96 @@
 
 brickgame.png
-size: 128,16
+size: 256,16
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+brick
+  rotate: false
+  xy: 107, 11
+  size: 8, 3
+  orig: 8, 3
+  offset: 0, 0
+  index: 0
+brick
+  rotate: false
+  xy: 107, 6
+  size: 8, 3
+  orig: 8, 3
+  offset: 0, 0
+  index: 1
+brick
+  rotate: false
+  xy: 117, 11
+  size: 8, 3
+  orig: 8, 3
+  offset: 0, 0
+  index: 2
+brick
+  rotate: false
+  xy: 117, 6
+  size: 8, 3
+  orig: 8, 3
+  offset: 0, 0
+  index: 3
+brick
+  rotate: false
+  xy: 127, 11
+  size: 8, 3
+  orig: 8, 3
+  offset: 0, 0
+  index: 4
+brick
+  rotate: false
+  xy: 127, 6
+  size: 8, 3
+  orig: 8, 3
+  offset: 0, 0
+  index: 5
+brick
+  rotate: false
+  xy: 137, 11
+  size: 8, 3
+  orig: 8, 3
+  offset: 0, 0
+  index: 6
 extraLife
   rotate: false
-  xy: 2, 2
+  xy: 2, 5
   size: 19, 9
   orig: 19, 9
   offset: 0, 0
   index: -1
 longPad
   rotate: false
-  xy: 23, 2
+  xy: 23, 5
   size: 19, 9
   orig: 19, 9
   offset: 0, 0
   index: -1
 plainTexture
   rotate: false
-  xy: 107, 9
+  xy: 107, 2
   size: 2, 2
   orig: 2, 2
   offset: 0, 0
   index: -1
 shortPad
   rotate: false
-  xy: 44, 2
+  xy: 44, 5
   size: 19, 9
   orig: 19, 9
   offset: 0, 0
   index: -1
 speedDown
   rotate: false
-  xy: 65, 2
+  xy: 65, 5
   size: 19, 9
   orig: 19, 9
   offset: 0, 0
   index: -1
 speedUp
   rotate: false
-  xy: 86, 2
+  xy: 86, 5
   size: 19, 9
   orig: 19, 9
   offset: 0, 0

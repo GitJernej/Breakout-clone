@@ -5,7 +5,6 @@
 		quit: { down: quit-down, up: quit-up, over: quit-hover }
 	},
 	com.badlogic.gdx.scenes.scene2d.ui.Image: {
-		menu-art: { drawable: menu-art },
-		title: { drawable: bricks-title },
+		title: { drawable: bricks-title },	
 	},
 }

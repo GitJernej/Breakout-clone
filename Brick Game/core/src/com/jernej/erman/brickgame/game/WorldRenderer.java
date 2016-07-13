@@ -2,11 +2,14 @@ package com.jernej.erman.brickgame.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Disposable;
 import com.jernej.erman.brickgame.util.Constants;
+import com.jernej.erman.brickgame.util.GamePreferences;
 
 public class WorldRenderer implements Disposable {
 
@@ -18,7 +21,8 @@ public class WorldRenderer implements Disposable {
 	private SpriteBatch batch;
 	private WorldController worldController;
 	
-	
+	private TextureRegion basicTexture;
+		
 	public WorldRenderer (WorldController worldController) {
 		this.worldController = worldController;
 		init();
@@ -26,6 +30,9 @@ public class WorldRenderer implements Disposable {
 	
 	private void init () {
 		batch = new SpriteBatch();
+		
+		basicTexture = Assets.instance.plainTexture.plainTexture;
+		
 		camera = new OrthographicCamera(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT);
 		camera.position.set(0, 0, 0);
 		camera.update();
@@ -56,13 +63,34 @@ public class WorldRenderer implements Disposable {
 		
 		renderExtraLives(batch);
 		
-		if(Constants.SHOW_FPS)	renderFpsCounter(batch);
-		
-		renderGuiGameEnded(batch);
+		if(GamePreferences.instance.showFpsCounter)	renderFpsCounter(batch);			
+		if(worldController.hasGameEnded) renderGuiGameEnded(batch);
+		if(worldController.paused) renderPausedWindow(batch);
 		
 		batch.end();
 	}
 	
+	private void renderPausedWindow(SpriteBatch batch) {
+		BitmapFont pausedTextBig = Assets.instance.fonts.defaultBig;
+		BitmapFont pausedTextNor = Assets.instance.fonts.defaultNormal;
+		
+		batch.setColor(1, 1, 1, 0.95f);
+		batch.draw(basicTexture, 0, Constants.VIEWPORT_GUI_HEIGHT/2, 
+				Constants.VIEWPORT_GUI_WIDTH, 250);
+		
+		pausedTextBig.setColor(0, 0, 0, 1);
+		pausedTextBig.draw(batch, "GAME PAUSED", 325, Constants.VIEWPORT_GUI_HEIGHT/2 + 200);
+		
+		pausedTextNor.setColor(0.2f, 0.2f, 0.2f, 1);
+		pausedTextNor.draw(batch, "MENU-[esc]     RESUME-[p]", 315, Constants.VIEWPORT_GUI_HEIGHT/2 + 75);
+		
+		pausedTextBig.setColor(1,1,1,1);
+		pausedTextNor.setColor(1,1,1,1);
+		
+		batch.setColor(1, 1, 1, 1);
+	
+	}
+
 	private void renderScore (SpriteBatch batch) {
 		// draw score
 		float x = 0;
@@ -102,21 +130,23 @@ public class WorldRenderer implements Disposable {
 		fpsFont.setColor(1, 1, 1, 1); // white
 	}
 	
-	private void renderGuiGameEnded (SpriteBatch batch){		
-		if(worldController.hasGameEnded){
-			float x = cameraGUI.viewportHeight / 2;
-			float y = cameraGUI.viewportWidth / 2;
-			// draw game over message + score
-			BitmapFont fontGameEnded = Assets.instance.fonts.defaultBig;
-			if(worldController.isGameOver()){
-				fontGameEnded.setColor(150/255.0f, 25/255.0f, 25/255.0f, 1);
-				fontGameEnded.draw(batch, "game over\nscore: " + worldController.score, x, y);
-			} else {
-				fontGameEnded.setColor(150/255.0f, 25/255.0f, 25/255.0f, 1);
-				fontGameEnded.draw(batch, "victory!\nscore: " + worldController.score, x, y);	
-			}
-			fontGameEnded.setColor(1,1,1,1);
+	private void renderGuiGameEnded (SpriteBatch batch){	
+		batch.setColor(1, 1, 1, 0.95f);
+		batch.draw(basicTexture, 0, Constants.VIEWPORT_GUI_HEIGHT/2, 
+				Constants.VIEWPORT_GUI_WIDTH, 250);
+		
+		float x = cameraGUI.viewportHeight / 2;
+		float y = cameraGUI.viewportWidth / 2;
+		// draw game over message + score
+		BitmapFont fontGameEnded = Assets.instance.fonts.defaultBig;
+		if(worldController.isGameOver()){
+			fontGameEnded.setColor(0.2f, 0.2f, 0.2f, 1);
+			fontGameEnded.draw(batch, "game over\nscore: " + worldController.score, x, y-50);
+		} else {
+			fontGameEnded.setColor(0.2f, 0.2f, 0.2f, 1);
+			fontGameEnded.draw(batch, "victory!\nscore: " + worldController.score, x, y-50);	
 		}
+		fontGameEnded.setColor(1,1,1,1);
 	}
 
 

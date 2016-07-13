@@ -1,11 +1,17 @@
 package com.jernej.erman.brickgame.game.objects;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public abstract class AbstractGameObject {
+	
+	public float stateTime;
+	public Animation animation;
+	
+	public boolean animComplete;
 	
 	public Vector2 position;
 	public Vector2 dimension;
@@ -31,6 +37,11 @@ public abstract class AbstractGameObject {
 		bounds = new Rectangle();
 	}	
 	
+	public void setAnimation (Animation animation){
+		this.animation = animation;
+		stateTime = 0;
+	}
+	
 	public float centerX(){
 		return position.x + (dimension.x / 2);
 	}
@@ -39,7 +50,7 @@ public abstract class AbstractGameObject {
 		return position.y + (dimension.y / 2);
 	}
 	
-	public void update (float deltaTime) {
+	public void update (float deltaTime) {		
 		// move to new position
 		position.x += velocity.x * deltaTime;
 		position.y += velocity.y * deltaTime;

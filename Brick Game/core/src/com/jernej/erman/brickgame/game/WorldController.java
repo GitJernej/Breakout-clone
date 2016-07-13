@@ -7,8 +7,8 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.Game;
 import com.jernej.erman.brickgame.screens.DirectedGame;
+import com.jernej.erman.brickgame.screens.GameScreen;
 import com.jernej.erman.brickgame.screens.MenuScreen;
 import com.jernej.erman.brickgame.screens.transitions.ScreenTransition;
 import com.jernej.erman.brickgame.screens.transitions.ScreenTransitionSlide;
@@ -19,6 +19,7 @@ import com.jernej.erman.brickgame.game.objects.PowerUp;
 import com.jernej.erman.brickgame.util.AudioManager;
 import com.jernej.erman.brickgame.util.CameraHelper;
 import com.jernej.erman.brickgame.util.Constants;
+import com.jernej.erman.brickgame.util.GamePreferences;
 
 public class WorldController extends InputAdapter {
 
@@ -27,11 +28,11 @@ public class WorldController extends InputAdapter {
 	boolean paused = false;
 	
 	boolean hasGameEnded;
-	
+		
 	public Level level;
 	public int score;
 	public int lives;
-	
+		
 	// number of blocks
 	public int bricksNumber;
 	
@@ -50,7 +51,7 @@ public class WorldController extends InputAdapter {
 	
 	private DirectedGame game;
 	
-	private void backToMenu() {
+	public void backToMenu() {
 		// switch to menu screen
 		ScreenTransition transition = ScreenTransitionSlide.init(1.0f, 
 				ScreenTransitionSlide.DOWN, false, Interpolation.fade);
@@ -79,7 +80,7 @@ public class WorldController extends InputAdapter {
 	private void initLevel () {
 		score = 0;
 		scoreVisual = score;
-		level = new Level(Constants.LEVEL);
+		level = new Level("levels/" + GamePreferences.instance.gameLevel);
 		bricksNumber = level.bricks.size;
 		Gdx.app.debug(TAG, "number of bricks in level: " + bricksNumber);	
 
@@ -92,7 +93,7 @@ public class WorldController extends InputAdapter {
 		if((areBricksGone() || isGameOver() ) && !hasGameEnded){
 			score += (Constants.LIVES_VALUE * lives);
 			hasGameEnded = true;
-			paused = true;
+			//paused = true;
 			timeLeftGameOverDelay = Constants.TIME_DELAY_GAME_OVER;
 		}
 		
@@ -101,9 +102,13 @@ public class WorldController extends InputAdapter {
 			backToMenu();
 		} else {
 			timeLeftGameOverDelay -= deltaTime;
+			if(hasGameEnded){
+				level.ball.velocity.x *= 0.93f;
+				level.ball.velocity.y *= 0.93f;
+			}
 		}
 		
-		if (paused) return;	
+		//if (paused) return;	
 		
 		handleGameInput(deltaTime);	
 
@@ -197,7 +202,7 @@ public class WorldController extends InputAdapter {
 
 	private void removePowerUp(PowerUp powerUp) {	
 		level.powerUps.removeIndex(level.powerUps.indexOf(powerUp, true));
-		Gdx.app.debug(TAG, "number of active power ups" + level.powerUps.size);
+		//Gdx.app.debug(TAG, "number of active power ups" + level.powerUps.size);
 	}
 
 	private void spawnPowerUp(Brick brick) {
@@ -219,21 +224,22 @@ public class WorldController extends InputAdapter {
 			ball.bounceX();
 			ball.position.x = - Constants.VIEWPORT_WIDTH / 2;
 		}
-		
 		// top collision
-		if (ball.position.y > Constants.VIEWPORT_HEIGHT / 2 - ball.dimension.y ){
+		else if (ball.position.y > Constants.VIEWPORT_HEIGHT / 2 - ball.dimension.y ){
 			ball.bounceY();
 			ball.position.y = Constants.VIEWPORT_HEIGHT / 2 - ball.dimension.y;
 		}
 		
 		// bottom collision
-		if(ball.position.y < - Constants.VIEWPORT_HEIGHT / 2){
+		else if(ball.position.y < - Constants.VIEWPORT_HEIGHT / 2){
+
+			AudioManager.instance.play(Assets.instance.sounds.lostLife);
+			
 			level.ball.ballLocked = true;
-			level.ball.currentVelocity = Constants.START_BALL_BELOCITY;
+			level.ball.currentVelocity = Constants.MAX_BALL_VELOCITY * GamePreferences.instance.ballSpeed;
 			level.ball.setPosition(level.pad);
 			lives--;
 			
-			AudioManager.instance.play(Assets.instance.sounds.lostLife);
 		}
 	}
 
@@ -246,7 +252,11 @@ public class WorldController extends InputAdapter {
 	}
 
 
-	private void calculateBallAngle(Ball ball, Pad pad) {		
+	private void calculateBallAngle(Ball ball, Pad pad) {
+
+		if(!ball.ballLocked)
+			AudioManager.instance.play(Assets.instance.sounds.bounce);
+		
 		// variables for calculating ball angle bounce
 		float relativeIntersectionX = 0;
 		float normalizedRelativeIntersectionX = 0;
@@ -264,13 +274,11 @@ public class WorldController extends InputAdapter {
 		// we convert it to radians, math.sin/cos take in radians and not angle degrees
 		bounceAngle = (float) Math.toRadians(bounceAngle);
 		
-		// we set the x and y to proper velocity for the so 
-		// their angle between their vectors in our bounce angle	
+		// we set the velocity x and y to their proper values so the
+		// angle is what we want and the speed is consistent
 		ball.velocity.x = (float) (ball.currentVelocity * Math.sin(bounceAngle));
 		ball.velocity.y = (float) (ball.currentVelocity * Math.cos(bounceAngle));
 		// math.end()
-		
-		AudioManager.instance.play(Assets.instance.sounds.bounce);
 	}
 
 	private void handleBallBrickCollisions(Ball ball) {		
@@ -349,13 +357,23 @@ public class WorldController extends InputAdapter {
 	@Override
 	public boolean keyUp (int keycode) {
 		
-		if (keycode == Keys.P || keycode == Keys.ESCAPE){
-			paused = !paused;
-			// if game gets paused, then cursor is not catched.
-			
+		if (keycode == Keys.P && paused){
+			paused = false;
+			game.resume();
 			Gdx.input.setCursorCatched(!paused);
-			Gdx.app.debug(TAG, "Game paused/unpaused");
+			Gdx.app.debug(TAG, "Unpaused");
+		}else if( keycode == Keys.ESCAPE && paused){
+			paused = false;
+			backToMenu();
+			Gdx.app.debug(TAG, "Returning to menu");
+		}		
+		else if((keycode == Keys.P || keycode == Keys.ESCAPE) && !paused){
+			paused = true;
+			game.pause();
+			Gdx.input.setCursorCatched(!paused);
+			Gdx.app.debug(TAG, "Paused");
 		}
+		
 		
 		// Reset game world
 		if (keycode == Keys.R) {

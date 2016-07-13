@@ -1,82 +1,138 @@
 
 brickgame-ui.png
-size: 1024,1024
+size: 1024,512
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 bricks-title
   rotate: false
-  xy: 2, 248
+  xy: 2, 366
   size: 432, 132
   orig: 432, 132
   offset: 0, 0
   index: -1
-menu-art
+level
   rotate: false
-  xy: 2, 382
-  size: 575, 575
-  orig: 575, 575
+  xy: 858, 482
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
-  index: -1
+  index: 0
+level
+  rotate: false
+  xy: 2, 20
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 1
+level
+  rotate: false
+  xy: 424, 72
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 2
+level
+  rotate: false
+  xy: 858, 464
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 3
+level
+  rotate: false
+  xy: 876, 482
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 4
+level
+  rotate: false
+  xy: 2, 2
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 5
+level
+  rotate: false
+  xy: 20, 20
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 6
+level
+  rotate: false
+  xy: 424, 54
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 7
+level
+  rotate: false
+  xy: 442, 72
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 8
 options-down
   rotate: false
-  xy: 579, 877
+  xy: 2, 284
   size: 420, 80
   orig: 420, 80
   offset: 0, 0
   index: -1
 options-hover
   rotate: false
-  xy: 2, 166
+  xy: 436, 418
   size: 420, 80
   orig: 420, 80
   offset: 0, 0
   index: -1
 options-up
   rotate: false
-  xy: 579, 795
+  xy: 2, 202
   size: 420, 80
   orig: 420, 80
   offset: 0, 0
   index: -1
 play-down
   rotate: false
-  xy: 2, 84
+  xy: 2, 120
   size: 420, 80
   orig: 420, 80
   offset: 0, 0
   index: -1
 play-hover
   rotate: false
-  xy: 579, 713
+  xy: 2, 38
   size: 420, 80
   orig: 420, 80
   offset: 0, 0
   index: -1
 play-up
   rotate: false
-  xy: 2, 2
+  xy: 436, 336
   size: 420, 80
   orig: 420, 80
   offset: 0, 0
   index: -1
 quit-down
   rotate: false
-  xy: 579, 631
+  xy: 424, 254
   size: 420, 80
   orig: 420, 80
   offset: 0, 0
   index: -1
 quit-hover
   rotate: false
-  xy: 579, 549
+  xy: 424, 172
   size: 420, 80
   orig: 420, 80
   offset: 0, 0
   index: -1
 quit-up
   rotate: false
-  xy: 579, 467
+  xy: 424, 90
   size: 420, 80
   orig: 420, 80
   offset: 0, 0

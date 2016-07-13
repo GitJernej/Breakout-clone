@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.jernej.erman.brickgame.game.Assets;
 import com.jernej.erman.brickgame.util.AudioManager;
 import com.jernej.erman.brickgame.util.Constants;
+import com.jernej.erman.brickgame.util.GamePreferences;
 
 public class Ball extends AbstractGameObject {
 
@@ -23,7 +24,7 @@ public class Ball extends AbstractGameObject {
 	
 	private void init(){
 		ballLocked = true;
-		currentVelocity = Constants.START_BALL_BELOCITY;
+		currentVelocity = Constants.MAX_BALL_VELOCITY * GamePreferences.instance.ballSpeed;
 		
 		dimension.set(0.2f, 0.2f);
 		

@@ -1,13 +1,23 @@
 package com.jernej.erman.brickgame.screens;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.jernej.erman.brickgame.game.WorldController;
 import com.jernej.erman.brickgame.game.WorldRenderer;
+import com.jernej.erman.brickgame.util.Constants;
 
-public class GameScreen extends AbstractGameScreen {
+public class GameScreen extends AbstractGameScreen{
 	
 	private static final String TAG = GameScreen.class.getName();
 	
@@ -16,15 +26,18 @@ public class GameScreen extends AbstractGameScreen {
 	
 	private boolean paused;
 	
+	private boolean debugEnabled = false;
+	
+	
 	public GameScreen (DirectedGame game) {
 		super(game);
-	}
+	}	
 
 	@Override
 	public void render(float deltaTime) {
 		// don't update if paused
 		if (!paused){
-			// update the game world by the tame that has passed since last render
+			// update the game world by the time that has passed since last render
 			worldController.update(deltaTime);
 		}
 		// sets the clear screen color
@@ -34,6 +47,15 @@ public class GameScreen extends AbstractGameScreen {
 		
 		// render the game world to screen
 		worldRenderer.render();
+	}
+
+	protected void onMenuClicked() {
+		worldController.backToMenu();
+		
+	}
+
+	protected void onResumeClicked() {
+		resume();		
 	}
 
 	@Override
@@ -50,13 +72,14 @@ public class GameScreen extends AbstractGameScreen {
 
 	@Override
 	public void hide() {
+		
 		worldRenderer.dispose();
 		Gdx.input.setCatchBackKey(false);
 	}
 
 	@Override
 	public void pause() {
-		paused = true;		
+		paused = true;
 	}
 
 	@Override
@@ -70,5 +93,6 @@ public class GameScreen extends AbstractGameScreen {
 	public InputProcessor getInputProcessor () {
 		return worldController;
 	}
+		
 	
 }

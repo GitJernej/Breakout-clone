@@ -6,11 +6,13 @@ import com.badlogic.gdx.assets.AssetErrorListener;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.jernej.erman.brickgame.util.Constants;
 
@@ -26,6 +28,7 @@ public class Assets implements Disposable, AssetErrorListener {
 	private Assets() {}
 	
 	public AssetPlainTexture plainTexture;
+	public AssetBrick brick;
 	
 	public AssetPowerShortPad shortPad;
 	public AssetPowerLongPad longPad;
@@ -64,6 +67,7 @@ public class Assets implements Disposable, AssetErrorListener {
 		}		
 		
 		// create game resource objects		
+		brick = new AssetBrick(atlas);
 		plainTexture = new AssetPlainTexture(atlas);
 		shortPad = new AssetPowerShortPad(atlas);
 		longPad = new AssetPowerLongPad(atlas);
@@ -75,6 +79,10 @@ public class Assets implements Disposable, AssetErrorListener {
 		music = new AssetMusic(assetManager);
 		
 		fonts = new AssetFonts();
+	}
+	
+	public class AssetLevels{
+		
 	}
 	
 	public class AssetSounds {
@@ -113,6 +121,23 @@ public class Assets implements Disposable, AssetErrorListener {
 			defaultSmall.getData().setScale(1.0f, 1.0f);
 			defaultNormal.getData().setScale(2.0f, 2.0f);
 			defaultBig.getData().setScale(4.0f, 4.0f);
+		}
+	}
+	
+	public class AssetBrick{
+		public final AtlasRegion brick;
+		public final Animation animBrick;
+		
+		public AssetBrick (TextureAtlas atlas){
+			brick = atlas.findRegion("brick_00");
+			
+			// animation: Destroyed Brick
+			Array<AtlasRegion> regions = atlas.findRegions("brick");
+			AtlasRegion region = regions.first();
+			for(int i = 0; i<7; i++)
+				regions.insert(0, region);
+			regions.removeIndex(0);
+			animBrick = new Animation(1.0f / 30.0f, regions, Animation.PlayMode.NORMAL);
 		}
 	}
 	

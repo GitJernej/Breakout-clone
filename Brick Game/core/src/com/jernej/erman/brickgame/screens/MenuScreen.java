@@ -1,9 +1,8 @@
 package com.jernej.erman.brickgame.screens;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -15,7 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
@@ -23,6 +22,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.jernej.erman.brickgame.screens.transitions.ScreenTransition;
 import com.jernej.erman.brickgame.screens.transitions.ScreenTransitionSlide;
@@ -38,11 +39,13 @@ public class MenuScreen extends AbstractGameScreen {
 	private Skin skinLibgdx;
 		
 	// menu
-	private Image imgMenuArt;
 	private Image imgTitle;
 	private Button btnPlay;
 	private Button btnOptions;
 	private Button btnQuit;
+	
+	// levels
+	private Array<TextButton> levelButtons;
 	
 	// options
 	private Window winOptions;
@@ -52,6 +55,9 @@ public class MenuScreen extends AbstractGameScreen {
 	private Slider sldSound;
 	private CheckBox chkMusic;
 	private Slider sldMusic;
+	
+	private Slider sldBallSpeed;
+	
 	private CheckBox chkShowFpsCounter;
 	
 	
@@ -72,6 +78,9 @@ public class MenuScreen extends AbstractGameScreen {
 		sldSound.setValue(prefs.volSound);
 		chkMusic.setChecked(prefs.music);
 		sldMusic.setValue(prefs.volMusic);
+		
+		sldBallSpeed.setValue(prefs.ballSpeed);
+		
 		chkShowFpsCounter.setChecked(prefs.showFpsCounter);
 	}
 
@@ -82,6 +91,9 @@ public class MenuScreen extends AbstractGameScreen {
 		prefs.volSound = sldSound.getValue();
 		prefs.music = chkMusic.isChecked();
 		prefs.volMusic = sldMusic.getValue();
+		
+		prefs.ballSpeed = sldBallSpeed.getValue();
+		
 		prefs.showFpsCounter = chkShowFpsCounter.isChecked();
 		prefs.save();
 	}
@@ -104,9 +116,13 @@ public class MenuScreen extends AbstractGameScreen {
 		skinLibgdx = new Skin(Gdx.files.internal(Constants.SKIN_LIBGDX_UI), 
 				new TextureAtlas(Constants.TEXTURE_ATLAS_LIBGDX_UI));
 		
+		// scroll test
+		ScrollPane scrollLevelsLayer = buildLevelsLayer();
+		
 		// build all layers
 		Table layerBackground = buildBackgroundLayer();
 		Table layerButton = buildButtonLayer();
+		
 		Table layerOptionsWindow = buildOptionsWindowLayer();
 		
 		// assemble stage for menu screen
@@ -115,16 +131,19 @@ public class MenuScreen extends AbstractGameScreen {
 		stage.addActor(stack);
 		stack.setSize(Constants.VIEWPORT_GUI_WIDTH, Constants.VIEWPORT_GUI_HEIGHT);
 		stack.add(layerBackground);
+		
+		stack.add(scrollLevelsLayer);
+		
 		stack.add(layerButton);
 		stage.addActor(layerOptionsWindow);
 		
 	}
-	
-	private Table buildOptWinAudioSettings() {
+
+	private Table buildOptWinAudioGameSettings() {
 		Table tbl = new Table();
 		// title: "audio"
 		tbl.pad(10,10,0,10);
-		tbl.add(new Label("Audio", skinLibgdx, "default-font", Color.ORANGE)).colspan(3);
+		tbl.add(new Label("Audio", skinLibgdx, "default-font", Color.CYAN)).colspan(3);
 		tbl.row();
 		tbl.columnDefaults(0).padRight(10);
 		tbl.columnDefaults(1).padRight(10);
@@ -147,6 +166,17 @@ public class MenuScreen extends AbstractGameScreen {
 		tbl.add(sldMusic);
 		tbl.row();
 		
+		// title: "game"
+		tbl.add(new Label("Game", skinLibgdx, "default-font", Color.CYAN)).colspan(3);
+		tbl.row();
+		
+		// ball speed slider
+		sldBallSpeed = new Slider(0.1f, 1.1f, 0.1f, false, skinLibgdx);
+		tbl.add();
+		tbl.add(new Label ("Ball Speed", skinLibgdx));
+		tbl.add(sldBallSpeed);
+		tbl.row();
+		
 		return tbl;
 	}
 	
@@ -154,7 +184,7 @@ public class MenuScreen extends AbstractGameScreen {
 		Table tbl = new Table();
 		// title "debug"
 		tbl.pad(10,10,0,10);
-		tbl.add(new Label ("Debug", skinLibgdx, "default-font", Color.RED)).colspan(3);
+		tbl.add(new Label ("Debug", skinLibgdx, "default-font", Color.WHITE)).colspan(3);
 		tbl.row();
 		tbl.columnDefaults(0).padRight(10);
 		tbl.columnDefaults(1).padRight(10);
@@ -211,7 +241,7 @@ public class MenuScreen extends AbstractGameScreen {
 		winOptions = new Window("Options", skinLibgdx);
 		
 		// audio settings: sound/music checkbox with slider
-		winOptions.add(buildOptWinAudioSettings()).row();
+		winOptions.add(buildOptWinAudioGameSettings()).row();
 		
 		// debug: show fps counter
 		winOptions.add(buildOptWinDebug()).row();
@@ -226,8 +256,9 @@ public class MenuScreen extends AbstractGameScreen {
 		if (debugEnabled) winOptions.debug();
 		// let TableLayout recalculate widget sizes and positions
 		winOptions.pack();
-		// move options window to bottom right corner
-		winOptions.setPosition(Constants.VIEWPORT_GUI_WIDTH - winOptions.getWidth() - 50, 50);
+		// move options window to the center
+		winOptions.setPosition((Constants.VIEWPORT_GUI_WIDTH / 2) - (winOptions.getWidth() / 2), 
+				(Constants.VIEWPORT_GUI_HEIGHT / 2) - (winOptions.getHeight() / 2));
 		
 		return winOptions;
 	}
@@ -237,16 +268,53 @@ public class MenuScreen extends AbstractGameScreen {
 		Table layer = new Table();
 		imgTitle = new Image(skinBrickgame, "bricks-title");
 		layer.addActor(imgTitle);
-		imgTitle.setPosition(160, 450);
-		
-		imgMenuArt = new Image(skinBrickgame, "menu-art");
-		layer.addActor(imgMenuArt);
-		imgMenuArt.setPosition(1280 - imgMenuArt.getWidth(), 0);
-		
-		
+		imgTitle.setPosition(160, 450);		
 		return layer;
 	}
 
+	private ScrollPane buildLevelsLayer() {
+		Table tbl = new Table();
+		levelButtons = new Array<TextButton>();
+		
+		tbl.add(buildLevelButton("Level 1", GamePreferences.instance.level_00)).pad(10, 10, 10, 10);
+		tbl.add(buildLevelButton("Level 2", GamePreferences.instance.level_01)).pad(10, 10, 10, 10);
+		tbl.add(buildLevelButton("Level 3", GamePreferences.instance.level_02)).pad(10, 10, 10, 10);
+		tbl.row();
+		tbl.add(buildLevelButton("Level 4", GamePreferences.instance.level_03)).pad(10, 10, 10, 10);
+		tbl.add(buildLevelButton("Level 5", GamePreferences.instance.level_04)).pad(10, 10, 10, 10);
+		tbl.add(buildLevelButton("Level 6", GamePreferences.instance.level_05)).pad(10, 10, 10, 10);
+		tbl.row();
+		tbl.add(buildLevelButton("Level 7", GamePreferences.instance.level_06)).pad(10, 10, 10, 10);
+		tbl.add(buildLevelButton("Level 8", GamePreferences.instance.level_07)).pad(10, 10, 10, 10);
+		tbl.add(buildLevelButton("Level 9", GamePreferences.instance.level_08)).pad(10, 10, 10, 10);
+		tbl.row();
+		
+		
+		tbl.pad(10,10,10,10);
+		tbl.padRight(150);
+		tbl.align(Align.right);
+
+		ScrollPane scrollPane = new ScrollPane(tbl);
+		// set scroll pane size/scrolling and so on...
+		scrollPane.setOrigin(150, 150);
+		return scrollPane;
+	}
+	
+	private TextButton buildLevelButton(String levelName, final String levelFile){
+		TextButton button = new TextButton(levelName, skinLibgdx);
+		button.pad(15, 15, 15, 15);
+		button.setName(levelFile);
+		button.addListener(new ChangeListener() {
+			
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				Gdx.app.debug(TAG, event.getListenerActor().getName());
+				GamePreferences.instance.gameLevel = levelFile;
+			}
+		});	
+		return button;
+	}
+	
 	private Table buildButtonLayer() {
 		
 		Table layer = new Table();

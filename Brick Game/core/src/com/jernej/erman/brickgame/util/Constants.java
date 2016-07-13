@@ -45,7 +45,7 @@ public class Constants {
 	//public static final String LEVEL = "levels/level_test.png";
 	
 	// actual level
-	public static final String LEVEL = "levels/simple.png";
+	public static final String DEFAULT_LEVEL = "level_00.png";
 	
 	// show fps
 	public static final boolean SHOW_FPS = true;
