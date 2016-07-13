@@ -5,11 +5,7 @@ My personal project for diploma thesis. Created with Java using the libGDX frame
 #####Main important things
 * improve the looks...
 * Testing
-* Bugs
-
- 
-#####Optional things
-- a way to select levels... Maybe.
+* fixing bugs that will arise
 
 ###Upcomming changes
 * animation for destroyed bricks
@@ -24,6 +20,14 @@ My personal project for diploma thesis. Created with Java using the libGDX frame
 - Don't reinvent the wheel, "borrow" the blueprint and make your own!
 
 ###Change notes
+
+v0.4
+* animation for destroyed bricks
+* when game has ended, the ball gradualy slows down
+* improved the looks of game won/lost message
+* improvised a meaningful pause/unpause screen
+* LEVEL SELECTION!
+ * 9 levels to select from 
 
 v0.3
 * new level
