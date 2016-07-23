@@ -8,7 +8,8 @@ My personal project for diploma thesis. Created with Java using the libGDX frame
 * fixing bugs that will arise
 
 ###Upcomming changes
-* tba 
+* replaced level buttons with level images.
+* better powerup icons
 
 ######Lessons learned:
 - Don't fix what's not broken.
