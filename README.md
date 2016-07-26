@@ -1,6 +1,8 @@
 # Breakout-clone
 My personal project for diploma thesis. Created with Java using the libGDX framework.
 
+Game version v0.5 can be downloaded [here] (https://drive.google.com/file/d/0B0rlu-lDfzw9eE9Qc0FieWlETWc/view?usp=sharing).
+
 ###to-do list: 
 #####Main important things
 * improve the looks...
