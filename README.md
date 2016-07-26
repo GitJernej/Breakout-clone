@@ -8,14 +8,18 @@ My personal project for diploma thesis. Created with Java using the libGDX frame
 * fixing bugs that will arise
 
 ###Upcomming changes
-* replaced level buttons with level images.
-* better powerup icons
+
 
 ######Lessons learned:
 - Don't fix what's not broken.
 - Don't reinvent the wheel, "borrow" the blueprint and make your own!
 
 ###Change notes
+
+v0.5
+* replaced level buttons with level images
+ * above the images, the selected level is written 
+* better powerup icons
 
 v0.4
 * animation for destroyed bricks
