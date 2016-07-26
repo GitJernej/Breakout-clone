@@ -11,7 +11,7 @@ public class GamePreferences {
 	public static final GamePreferences instance = new GamePreferences();
 	
 	public String level_00, level_01, level_02, level_03, level_04, level_05, level_06, level_07, level_08;
-	public String gameLevel;
+	public String gameLevel, levelName;
 	
 	public boolean sound;
 	public boolean music;
@@ -40,6 +40,8 @@ public class GamePreferences {
 		level_08 = prefs.getString("level_08", "level_08.png");
 		
 		gameLevel = prefs.getString("gameLevel", "level_00.png");
+		levelName = prefs.getString("levelName", "level 1");
+		
 		
 		sound = prefs.getBoolean("sound", true);
 		music = prefs.getBoolean("music", true);
@@ -64,6 +66,7 @@ public class GamePreferences {
 		prefs.putString("level_08", level_08);
 		
 		prefs.putString("gameLevel", gameLevel);
+		prefs.putString("levelName", levelName);
 		
 		prefs.putBoolean("sound", sound);
 		prefs.putBoolean("music", music);

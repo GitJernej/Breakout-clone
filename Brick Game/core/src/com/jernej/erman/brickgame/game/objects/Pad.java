@@ -28,11 +28,10 @@ public class Pad extends AbstractGameObject {
 	}
 	
 	public void resizePad(float factor){
-		if(dimension.x > 2.4f && factor > 1) return;
-		else if (dimension.x < 0.8f && factor < 1 ) return;
-
-		position.x = position.x - (dimension.x * factor - dimension.x)/2;
-		dimension.x = dimension.x * factor;
+		if((dimension.x + factor) > 2.0f || (dimension.x + factor) <0.8f ) return;
+		
+		position.x = position.x - (factor / 2);
+		dimension.x = dimension.x + factor;
 		bounds.setWidth(dimension.x);
 	}
 	

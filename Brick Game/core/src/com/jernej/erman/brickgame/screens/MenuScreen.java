@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -45,7 +46,7 @@ public class MenuScreen extends AbstractGameScreen {
 	private Button btnQuit;
 	
 	// levels
-	private Array<TextButton> levelButtons;
+	private Array<ImageButton> levelButtons;
 	
 	// options
 	private Window winOptions;
@@ -113,7 +114,8 @@ public class MenuScreen extends AbstractGameScreen {
 		skinBrickgame = new Skin(
 				Gdx.files.internal(Constants.SKIN_BRICKGAME_UI), 
 				new TextureAtlas(Constants.TEXTURE_ATLAS_UI));
-		skinLibgdx = new Skin(Gdx.files.internal(Constants.SKIN_LIBGDX_UI), 
+		skinLibgdx = new Skin(
+				Gdx.files.internal(Constants.SKIN_LIBGDX_UI), 
 				new TextureAtlas(Constants.TEXTURE_ATLAS_LIBGDX_UI));
 		
 		// scroll test
@@ -274,19 +276,22 @@ public class MenuScreen extends AbstractGameScreen {
 
 	private ScrollPane buildLevelsLayer() {
 		Table tbl = new Table();
-		levelButtons = new Array<TextButton>();
+		levelButtons = new Array<ImageButton>();
 		
-		tbl.add(buildLevelButton("Level 1", GamePreferences.instance.level_00)).pad(10, 10, 10, 10);
-		tbl.add(buildLevelButton("Level 2", GamePreferences.instance.level_01)).pad(10, 10, 10, 10);
-		tbl.add(buildLevelButton("Level 3", GamePreferences.instance.level_02)).pad(10, 10, 10, 10);
+		tbl.add(new Label("Selected: " + GamePreferences.instance.levelName, skinLibgdx)).colspan(3);
 		tbl.row();
-		tbl.add(buildLevelButton("Level 4", GamePreferences.instance.level_03)).pad(10, 10, 10, 10);
-		tbl.add(buildLevelButton("Level 5", GamePreferences.instance.level_04)).pad(10, 10, 10, 10);
-		tbl.add(buildLevelButton("Level 6", GamePreferences.instance.level_05)).pad(10, 10, 10, 10);
+		
+		tbl.add(buildLevelButton("level 1", GamePreferences.instance.level_00)).pad(10, 10, 10, 10);
+		tbl.add(buildLevelButton("level 2", GamePreferences.instance.level_01)).pad(10, 10, 10, 10);
+		tbl.add(buildLevelButton("level 3", GamePreferences.instance.level_02)).pad(10, 10, 10, 10);
 		tbl.row();
-		tbl.add(buildLevelButton("Level 7", GamePreferences.instance.level_06)).pad(10, 10, 10, 10);
-		tbl.add(buildLevelButton("Level 8", GamePreferences.instance.level_07)).pad(10, 10, 10, 10);
-		tbl.add(buildLevelButton("Level 9", GamePreferences.instance.level_08)).pad(10, 10, 10, 10);
+		tbl.add(buildLevelButton("level 4", GamePreferences.instance.level_03)).pad(10, 10, 10, 10);
+		tbl.add(buildLevelButton("level 5", GamePreferences.instance.level_04)).pad(10, 10, 10, 10);
+		tbl.add(buildLevelButton("level 6", GamePreferences.instance.level_05)).pad(10, 10, 10, 10);
+		tbl.row();
+		tbl.add(buildLevelButton("level 7", GamePreferences.instance.level_06)).pad(10, 10, 10, 10);
+		tbl.add(buildLevelButton("level 8", GamePreferences.instance.level_07)).pad(10, 10, 10, 10);
+		tbl.add(buildLevelButton("level 9", GamePreferences.instance.level_08)).pad(10, 10, 10, 10);
 		tbl.row();
 		
 		
@@ -300,8 +305,13 @@ public class MenuScreen extends AbstractGameScreen {
 		return scrollPane;
 	}
 	
-	private TextButton buildLevelButton(String levelName, final String levelFile){
-		TextButton button = new TextButton(levelName, skinLibgdx);
+	private Button buildLevelButton(final String levelName, final String levelFile){
+		ImageButton button = new ImageButton(skinBrickgame, levelName);
+		
+		// TODO - buttons are too small. 
+		
+		button.getImageCell().expand().fill();
+		
 		button.pad(15, 15, 15, 15);
 		button.setName(levelFile);
 		button.addListener(new ChangeListener() {
@@ -310,6 +320,8 @@ public class MenuScreen extends AbstractGameScreen {
 			public void changed(ChangeEvent event, Actor actor) {
 				Gdx.app.debug(TAG, event.getListenerActor().getName());
 				GamePreferences.instance.gameLevel = levelFile;
+				GamePreferences.instance.levelName = levelName;
+				rebuildStage();
 			}
 		});	
 		return button;

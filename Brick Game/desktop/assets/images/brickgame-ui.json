@@ -2,7 +2,18 @@
 	com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 		play: { down: play-down, up: play-up, over: play-hover },
 		options: { down: options-down, up: options-up, over: options-hover },
-		quit: { down: quit-down, up: quit-up, over: quit-hover }
+		quit: { down: quit-down, up: quit-up, over: quit-hover },
+	},
+	com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {		
+		level 1: { down: level-00-down, up: level-00-up, over: level-00-down },
+		level 2: { down: level-01-down, up: level-01-up, over: level-01-down },
+		level 3: { down: level-02-down, up: level-02-up, over: level-02-down },
+		level 4: { down: level-03-down, up: level-03-up, over: level-03-down },
+		level 5: { down: level-04-down, up: level-04-up, over: level-04-down },
+		level 6: { down: level-05-down, up: level-05-up, over: level-05-down },
+		level 7: { down: level-06-down, up: level-06-up, over: level-06-down },
+		level 8: { down: level-07-down, up: level-07-up, over: level-07-down },
+		level 9: { down: level-08-down, up: level-08-up, over: level-08-down },
 	},
 	com.badlogic.gdx.scenes.scene2d.ui.Image: {
 		title: { drawable: bricks-title },	

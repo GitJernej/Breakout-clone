@@ -179,10 +179,10 @@ public class WorldController extends InputAdapter {
 		Gdx.app.debug(TAG, "number of active power ups" + level.powerUps.size);
 		switch(powerUp.type){
 		case SHORT_PAD:
-			level.pad.resizePad(0.85f);
+			level.pad.resizePad(-0.2f);
 			break;
 		case LONG_PAD:
-			level.pad.resizePad(1.15f);
+			level.pad.resizePad(0.2f);
 			break;
 		case EXTRA_LIFE:
 			lives ++;

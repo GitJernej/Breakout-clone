@@ -20,7 +20,7 @@ public class PowerUp extends AbstractGameObject {
 	}
 	
 	private void init(Brick brick){		
-		dimension.set(0.57f, 0.27f);
+		dimension.set(0.495f, 0.255f);
 		// random roll for the power-up type
 		rollForType();
 		// load the proper image depending on type
@@ -33,6 +33,7 @@ public class PowerUp extends AbstractGameObject {
 				break;
 			case EXTRA_LIFE:
 				regPower = Assets.instance.extraLife.extraLife;
+				dimension.set(0.32f, 0.32f);
 				break;
 			case SPEED_UP:
 				regPower = Assets.instance.speedUp.speedUp;
