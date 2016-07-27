@@ -78,12 +78,12 @@ public class Level {
 	}
 	
 	public void update (float deltaTime) {
+		for (Brick brick : bricks)
+			brick.update(deltaTime);
+		
 		for (PowerUp powerUp : powerUps)
 			powerUp.update(deltaTime);
 		
-		for (Brick brick : bricks){
-			brick.update(deltaTime);
-		}
 		pad.update(deltaTime);
 
 		ball.update(deltaTime);
@@ -93,15 +93,14 @@ public class Level {
 	}
 	
 	public void render (SpriteBatch batch) {
-		for (PowerUp powerUp : powerUps)
-			powerUp.render(batch);
-		
 		for (Brick brick : bricks)
 			brick.render(batch);
 		
+		for (PowerUp powerUp : powerUps)
+			powerUp.render(batch);
+		
 		pad.render(batch);
 		ball.render(batch);
-		
 		
 	}
 	
