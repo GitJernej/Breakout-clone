@@ -10,7 +10,8 @@ Game version v0.5 can be downloaded [here] (https://drive.google.com/file/d/0B0r
 * fixing bugs that will arise
 
 ###Upcomming changes
-
+* white ball particles instead of white-yellow
+* powerups appear in the front of bricks and not behind them
 
 ######Lessons learned:
 - Don't fix what's not broken.
