@@ -3,21 +3,18 @@ My personal project for diploma thesis. Created with Java using the libGDX frame
 
 Game version v0.5 can be downloaded [here] (https://drive.google.com/file/d/0B0rlu-lDfzw9eE9Qc0FieWlETWc/view?usp=sharing).
 
-###to-do list: 
-#####Main important things
-* improve the looks...
-* Testing
-* fixing bugs that will arise
-
 ###Upcomming changes
-* white ball particles instead of white-yellow
-* powerups appear in the front of bricks and not behind them
+* TBA
 
 ######Lessons learned:
 - Don't fix what's not broken.
 - Don't reinvent the wheel, "borrow" the blueprint and make your own!
 
 ###Change notes
+
+v0.6
+* white ball particles instead of white-yellow
+* powerups appear in the front of bricks and not behind them
 
 v0.5
 * replaced level buttons with level images
